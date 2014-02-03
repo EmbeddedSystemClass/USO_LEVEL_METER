@@ -13,11 +13,14 @@ enum
 
 
 //------------------------------------------------------------
-void Calibrate(unsigned char channel_num,float K,float C); //общая функция калибровки
+//void Calibrate(unsigned char channel_num,float K,float C); //общая функция калибровки
 void RestoreCalibrate(void);		 //восстановление точек калибровки из EEPROM
-unsigned long GetCalibrateVal(unsigned char channel_num,unsigned long ADC_Code);   //преобразование значения АЦП в значение плотности в кг\м^3
-unsigned char Calibrate_Get_CRC(void);//расчет crc  в eerprom 
-void Calibrate_Set_Flag(unsigned char channel,unsigned char flag);//установить/снять флаг калиброванности канала
-void Calibrate_Set_Default(void);//установка калибровки по умолчанию(отключена)
+float GetCalibrateVal(unsigned char channel_num,unsigned long ADC_Code);   //преобразование значения АЦП в значение плотности в кг\м^3
+//unsigned char Calibrate_Get_CRC(void);//расчет crc  в eerprom 
+//void Calibrate_Set_Flag(unsigned char channel,unsigned char flag);//установить/снять флаг калиброванности канала
+//void Calibrate_Set_Default(void);//установка калибровки по умолчанию(отключена)
+
+void SetFirstPoint(unsigned char channel_num,long ADC_Code,float val);
+void SetSecondPoint(unsigned char channel_num,long ADC_Code,float val);
 //------------------------------------------------------------
 #endif

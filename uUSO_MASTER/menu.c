@@ -3,7 +3,7 @@
 #include "keyboard.h"
 #include <stdio.h>
 #include <intrins.h>
-#include "lcd.h"
+
 #include "proto_uso/proto_uso.h"
 #include "proto_uso/channels.h"
 #include <string.h>
@@ -163,8 +163,8 @@ xdata menuItem code * tempMenu, *tempMenu2;
 
 	tempMenu = selectedMenuItem;//->Parent;
 
-	LCD_WriteCommand(LCD_CMD_ON);
-    LCD_WriteCommand(LCD_CMD_CLEAR);
+	//LCD_WriteCommand(LCD_CMD_ON);
+    //LCD_WriteCommand(LCD_CMD_CLEAR);
 
 	if ((tempMenu == &m_s0i1)||(tempMenu == &m_s0i2)||(tempMenu == &m_s0i3)||(tempMenu == &m_s0i4)) 
 	{ // мы на верхнем уровне
@@ -174,34 +174,34 @@ xdata menuItem code * tempMenu, *tempMenu2;
 	{
 		dynamic_disp=DYN_NOT_DISPLAY;
 
-		LCD_WriteCommand(LCD_SET_ADDR|0x1);
-		LCD_WriteCommand(LCD_SET_ADDR|0x1);
+		//LCD_WriteCommand(LCD_SET_ADDR|0x1);
+		//LCD_WriteCommand(LCD_SET_ADDR|0x1);
 
 		tempMenu2=tempMenu->Previous;
 		if(tempMenu2!=&NULL_ENTRY)
 		{
-			LCD_WriteString(tempMenu2->Text);
+			//LCD_WriteString(tempMenu2->Text);
 		}
 		
-		LCD_WriteCommand(LCD_SET_ADDR|0x40);
-		LCD_WriteData(0xC9);
+		//LCD_WriteCommand(LCD_SET_ADDR|0x40);
+		//LCD_WriteData(0xC9);
 
-		LCD_WriteCommand(LCD_SET_ADDR|0x41);
-		LCD_WriteString(tempMenu->Text);
+		//LCD_WriteCommand(LCD_SET_ADDR|0x41);
+		//LCD_WriteString(tempMenu->Text);
 
 
-		LCD_WriteCommand(LCD_SET_ADDR|0x15);
+		//LCD_WriteCommand(LCD_SET_ADDR|0x15);
 
 		tempMenu2=tempMenu->Next;
 		if(tempMenu2!=&NULL_ENTRY)
 		{
-			LCD_WriteString(tempMenu2->Text);
+			//LCD_WriteString(tempMenu2->Text);
 
-			LCD_WriteCommand(LCD_SET_ADDR|0x55);
+			//LCD_WriteCommand(LCD_SET_ADDR|0x55);
 	
 			tempMenu2=tempMenu2->Next;
-			if(tempMenu2!=&NULL_ENTRY)
-		    LCD_WriteString(tempMenu2->Text);
+		//	if(tempMenu2!=&NULL_ENTRY)
+		    //LCD_WriteString(tempMenu2->Text);
 		}
 	}
 	return (1);
@@ -259,7 +259,7 @@ unsigned char menuKey(unsigned char key)
 			case 'C': 
 			{ // отмена выбора (возврат)
 				menuChange(PARENT);
-//				LCD_WriteCommand(LCD_CMD_ON);
+//				//LCD_WriteCommand(LCD_CMD_ON);
 			}
 			break;
 	
@@ -271,8 +271,8 @@ unsigned char menuKey(unsigned char key)
 	
 		if(key!=0)
 	   	{
-			LCD_WriteCommand(LCD_CMD_CLEAR);
-			delay(10);
+			//LCD_WriteCommand(LCD_CMD_CLEAR);
+		//	delay(10);
 			dispMenu(); 
 		}
 	}
@@ -283,10 +283,10 @@ unsigned char menuKey(unsigned char key)
 	
 			flag_menu_entry=0;
 			dynamic_disp=DYN_NOT_DISPLAY;
-			LCD_WriteCommand(LCD_CMD_CLEAR);
-			delay(3);
-			LCD_WriteCommand(LCD_CMD_ON);
-			delay(3);
+			//LCD_WriteCommand(LCD_CMD_CLEAR);
+//			delay(3);
+			//LCD_WriteCommand(LCD_CMD_ON);
+		//	delay(3);
 			dispMenu(); 
 		}
 		else
@@ -411,7 +411,7 @@ void CalibrationKey(unsigned char key,unsigned char channel)
 		{
 			case 'F':
 			{				
-				LCD_WriteCommand(LCD_CMD_CLEAR);
+				//LCD_WriteCommand(LCD_CMD_CLEAR);
 
 				dynamic_disp= DYN_DISPALY_ON;
 
@@ -535,43 +535,43 @@ void CalibrationKey(unsigned char key,unsigned char channel)
 void CalibrationScreen(unsigned char channel)//экран калибровки канала
 {
 //   sprintf(&string_buf,"Chn. val.:% 8lu",channels[channel].channel_data);
-//   LCD_WriteAC(LCD_1_STR_ADDR);
-//   LCD_WriteString(&string_buf);
+//   //LCD_WriteAC(LCD_1_STR_ADDR);
+//   //LCD_WriteString(&string_buf);
 
  	if(input_field_ptr==&input_field_lo)
 	{
-			LCD_WriteAC(LCD_1_STR_ADDR);
+			//LCD_WriteAC(LCD_1_STR_ADDR);
 			sprintf(&string_buf,"Low val [%6s]",input_field_lo.input_char_buf);
-			LCD_WriteString(&string_buf);
+			//LCD_WriteString(&string_buf);
 
-			LCD_WriteAC(LCD_2_STR_ADDR);
+			//LCD_WriteAC(LCD_2_STR_ADDR);
 			sprintf(&string_buf,"High val %6s ",input_field_hi.input_char_buf);
-			LCD_WriteString(&string_buf);
+			//LCD_WriteString(&string_buf);
 
-			LCD_WriteAC(LCD_4_STR_ADDR);
+			//LCD_WriteAC(LCD_4_STR_ADDR);
 			sprintf(&string_buf,"'='-Enter,'/'-Del");
-			LCD_WriteString(&string_buf);
+			//LCD_WriteString(&string_buf);
 
-			LCD_WriteAC(LCD_1_STR_ADDR+9+input_field_lo.char_count);
-			LCD_WriteCommand(LCD_CMD_CURSOR);
+			//LCD_WriteAC(LCD_1_STR_ADDR+9+input_field_lo.char_count);
+			//LCD_WriteCommand(LCD_CMD_CURSOR);
 	}
 
 	if(input_field_ptr==&input_field_hi)
 	{
-			LCD_WriteAC(LCD_1_STR_ADDR);
+			//LCD_WriteAC(LCD_1_STR_ADDR);
 			sprintf(&string_buf,"Low val  %6s ",input_field_lo.input_char_buf);
-			LCD_WriteString(&string_buf); 
+			//LCD_WriteString(&string_buf); 
 
-			LCD_WriteAC(LCD_2_STR_ADDR);
+			//LCD_WriteAC(LCD_2_STR_ADDR);
 			sprintf(&string_buf,"High val[%6s]",input_field_hi.input_char_buf);
-			LCD_WriteString(&string_buf);
+			//LCD_WriteString(&string_buf);
 
-			LCD_WriteAC(LCD_4_STR_ADDR);
+			//LCD_WriteAC(LCD_4_STR_ADDR);
 			sprintf(&string_buf,"'='-Enter,'/'-Del");
-			LCD_WriteString(&string_buf);
+			//LCD_WriteString(&string_buf);
 
-			LCD_WriteAC(LCD_2_STR_ADDR+9+input_field_hi.char_count);
-			LCD_WriteCommand(LCD_CMD_CURSOR);
+			//LCD_WriteAC(LCD_2_STR_ADDR+9+input_field_hi.char_count);
+			//LCD_WriteCommand(LCD_CMD_CURSOR);
 	}
 }
 
@@ -582,7 +582,7 @@ void SettingsKey(unsigned char key)
 		{
 			case 'F':
 			{				
-				LCD_WriteCommand(LCD_CMD_CLEAR);
+				//LCD_WriteCommand(LCD_CMD_CLEAR);
 
 //				input_field_hi.char_count=2;
 				input_field_lo.char_count=2;
@@ -680,16 +680,16 @@ void SettingsScreen(void)
 {
  	if(input_field_ptr==&input_field_lo)
 	{
-			LCD_WriteAC(LCD_1_STR_ADDR);
+			//LCD_WriteAC(LCD_1_STR_ADDR);
 			sprintf(&string_buf,"Address [%2s]",input_field_lo.input_char_buf);
-			LCD_WriteString(&string_buf);
+			//LCD_WriteString(&string_buf);
 
-			LCD_WriteAC(LCD_4_STR_ADDR);
+			//LCD_WriteAC(LCD_4_STR_ADDR);
 			sprintf(&string_buf,"'='-Enter,'/'-Del");
-			LCD_WriteString(&string_buf);
+			//LCD_WriteString(&string_buf);
 
-			LCD_WriteAC(LCD_1_STR_ADDR+9+input_field_lo.char_count);
-			LCD_WriteCommand(LCD_CMD_CURSOR);
+			//LCD_WriteAC(LCD_1_STR_ADDR+9+input_field_lo.char_count);
+			//LCD_WriteCommand(LCD_CMD_CURSOR);
 	}	
 }
 
@@ -738,8 +738,8 @@ static float I_ch4=18.6;
 		}
 	
 		sprintf(&string_buf,"P=%3dkg/cm F=%4dkgs",P,F);
-		LCD_WriteAC(LCD_1_STR_ADDR);
-		LCD_WriteString(&string_buf);
+		//LCD_WriteAC(LCD_1_STR_ADDR);
+		//LCD_WriteString(&string_buf);
 	   
 	
 		//U_ch2=(unsigned int)(channels[1].channel_data*10000/0xFFFF);
@@ -751,9 +751,9 @@ static float I_ch4=18.6;
 		}
 	
 		sprintf(&string_buf,"2=%4d  mV",U_ch2);
-		LCD_WriteAC(LCD_2_STR_ADDR);
+		//LCD_WriteAC(LCD_2_STR_ADDR);
 	//	PT_YIELD(pt);//дадим другим процессам время
-		LCD_WriteString(&string_buf);
+		//LCD_WriteString(&string_buf);
 		
 		//U_ch3=(unsigned int)(channels[2].channel_data*10000/0xFFFF);
 		U_ch3=(unsigned int)GetCalibrateVal(2,channels[2].channel_data);
@@ -763,8 +763,8 @@ static float I_ch4=18.6;
 		}
 	
 		sprintf(&string_buf,"3=%4d  mV",U_ch3);
-		LCD_WriteAC(LCD_3_STR_ADDR);
-		LCD_WriteString(&string_buf);
+		//LCD_WriteAC(LCD_3_STR_ADDR);
+		//LCD_WriteString(&string_buf);
 
 
 //	 	I_ch4=((float)channels[3].channel_data*20.0/0xFFFF);
@@ -774,9 +774,9 @@ static float I_ch4=18.6;
 //		}
 		
 //		sprintf(&string_buf,"Cal_3=%5.3f",GetCalibrateVal(2,channels[2].channel_data));
-//		LCD_WriteAC(LCD_3_STR_ADDR);
+//		//LCD_WriteAC(LCD_3_STR_ADDR);
 //	//	PT_YIELD(pt);//дадим другим процессам время
-//		LCD_WriteString(&string_buf);
+//		//LCD_WriteString(&string_buf);
 		
 			
 		
@@ -788,77 +788,77 @@ static float I_ch4=18.6;
 		}
 		
 		sprintf(&string_buf,"4=%4.1f  mA",I_ch4);
-		LCD_WriteAC(LCD_4_STR_ADDR);
+		//LCD_WriteAC(LCD_4_STR_ADDR);
 	//	PT_YIELD(pt);//дадим другим процессам время
-		LCD_WriteString(&string_buf);	
+		//LCD_WriteString(&string_buf);	
 	}
 
 	if(selectedMenuItem == &m_s0i2)
 	{
 		sprintf(&string_buf,"Chnl. 5=%9.3f",GetCalibrateVal(4,channels[4].channel_data));
-		LCD_WriteAC(LCD_1_STR_ADDR);
-		LCD_WriteString(&string_buf);
+		//LCD_WriteAC(LCD_1_STR_ADDR);
+		//LCD_WriteString(&string_buf);
 
 		sprintf(&string_buf,"Chnl. 6=%9.3f",GetCalibrateVal(5,channels[5].channel_data));
-		LCD_WriteAC(LCD_2_STR_ADDR);
-		LCD_WriteString(&string_buf);
+		//LCD_WriteAC(LCD_2_STR_ADDR);
+		//LCD_WriteString(&string_buf);
 
 		sprintf(&string_buf,"Chnl. 7=%9.3f",GetCalibrateVal(6,channels[6].channel_data));
-		LCD_WriteAC(LCD_3_STR_ADDR);
-		LCD_WriteString(&string_buf);
+		//LCD_WriteAC(LCD_3_STR_ADDR);
+		//LCD_WriteString(&string_buf);
 
 		sprintf(&string_buf,"Chnl. 8=%9.3f",GetCalibrateVal(7,channels[7].channel_data));
-		LCD_WriteAC(LCD_4_STR_ADDR);
-		LCD_WriteString(&string_buf);
+		//LCD_WriteAC(LCD_4_STR_ADDR);
+		//LCD_WriteString(&string_buf);
 	}
 
 	if(selectedMenuItem == &m_s0i3)
 	{
 // 		sprintf(&string_buf,"Freq. 1=%5.1f",GetCalibrateVal(8,channels[8].channel_data));
-//		LCD_WriteAC(LCD_1_STR_ADDR);
-//		LCD_WriteString(&string_buf);
+//		//LCD_WriteAC(LCD_1_STR_ADDR);
+//		//LCD_WriteString(&string_buf);
 //
 //		sprintf(&string_buf,"Freq. 2=%5.1f",GetCalibrateVal(9,channels[9].channel_data));
-//		LCD_WriteAC(LCD_2_STR_ADDR);
-//		LCD_WriteString(&string_buf);
+//		//LCD_WriteAC(LCD_2_STR_ADDR);
+//		//LCD_WriteString(&string_buf);
 //
 //		sprintf(&string_buf,"Freq. 3=%5.1f",GetCalibrateVal(10,channels[10].channel_data));
-//		LCD_WriteAC(LCD_3_STR_ADDR);
-//		LCD_WriteString(&string_buf);
+//		//LCD_WriteAC(LCD_3_STR_ADDR);
+//		//LCD_WriteString(&string_buf);
 //
 //		sprintf(&string_buf,"Freq. Hi=%5u",(unsigned int)GetCalibrateVal(12,channels[12].channel_data));
-//		LCD_WriteAC(LCD_4_STR_ADDR);
-//		LCD_WriteString(&string_buf);
+//		//LCD_WriteAC(LCD_4_STR_ADDR);
+//		//LCD_WriteString(&string_buf);
 
  		sprintf(&string_buf,"Freq. 1=%5.1f Hz",(float)channels[8].channel_data/256);
-		LCD_WriteAC(LCD_1_STR_ADDR);
-		LCD_WriteString(&string_buf);
+		//LCD_WriteAC(LCD_1_STR_ADDR);
+		//LCD_WriteString(&string_buf);
 
 		sprintf(&string_buf,"Freq. 2=%5.1f Hz",(float)channels[9].channel_data/256);
-		LCD_WriteAC(LCD_2_STR_ADDR);
-		LCD_WriteString(&string_buf);
+		//LCD_WriteAC(LCD_2_STR_ADDR);
+		//LCD_WriteString(&string_buf);
 
 		sprintf(&string_buf,"Freq. 3=%5.1f Hz",(float)channels[10].channel_data/256);
-		LCD_WriteAC(LCD_3_STR_ADDR);
-		LCD_WriteString(&string_buf);
+		//LCD_WriteAC(LCD_3_STR_ADDR);
+		//LCD_WriteString(&string_buf);
 
 		sprintf(&string_buf,"Freq.Hi=%5u Hz",(unsigned int)channels[12].channel_data);
-		LCD_WriteAC(LCD_4_STR_ADDR);
-		LCD_WriteString(&string_buf);
+		//LCD_WriteAC(LCD_4_STR_ADDR);
+		//LCD_WriteString(&string_buf);
 	}
 
 	if(selectedMenuItem == &m_s0i4)
 	{
 //		sprintf(&string_buf,"DOL =%08lu",(unsigned long)GetCalibrateVal(11,channels[11].channel_data));
-//		LCD_WriteAC(LCD_1_STR_ADDR);
-//		LCD_WriteString(&string_buf);
+//		//LCD_WriteAC(LCD_1_STR_ADDR);
+//		//LCD_WriteString(&string_buf);
 		sprintf(&string_buf,"Freq.Hi=%5u Hz",(unsigned int)channels[13].channel_data);
-		LCD_WriteAC(LCD_1_STR_ADDR);
-		LCD_WriteString(&string_buf);		
+		//LCD_WriteAC(LCD_1_STR_ADDR);
+		//LCD_WriteString(&string_buf);		
 
 		sprintf(&string_buf,"DOL =%08lu",channels[11].channel_data);
-		LCD_WriteAC(LCD_2_STR_ADDR);
-		LCD_WriteString(&string_buf);
+		//LCD_WriteAC(LCD_2_STR_ADDR);
+		//LCD_WriteString(&string_buf);
 	}
 
 	if(flag_menu_entry==1)

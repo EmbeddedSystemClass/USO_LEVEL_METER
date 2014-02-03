@@ -1,6 +1,6 @@
 
 #include "keyboard.h"
-#include "lcd.h"
+//#include "lcd.h"
 #include <stdio.h>
 #include "menu.h"
 #include <intrins.h>

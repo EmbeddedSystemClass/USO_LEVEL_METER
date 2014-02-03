@@ -3,7 +3,7 @@
 #include "eeprom/eeprom.h"
 #include "preferences.h"
 //---------------------------------------
-#define CHANNEL_NUMBER	14//количество каналов
+#define CHANNEL_NUMBER	6//количество каналов
 //---------------------------каналы---------------------------------
 #define CHNL_ADC	0//канал ацп
 	#define CHNL_ADC_FIX_16	0
@@ -40,17 +40,21 @@ struct Channel
 	} settings;
 	
 	unsigned long channel_data;		  // значение канала
-	unsigned long channel_data_calibrate;//значение канала калиброванное
+    float  channel_data_calibrate;//калиброванное значение канала
 
 	union
 	{
 		struct
 		{
-			unsigned char calibrate;//флаг калиброванности канала
-			float K;//
-			float C;//y=kx+c		
+			unsigned long  adc_lo;
+			float 		   cal_lo;
+			
+			unsigned long  adc_hi;
+			float 		   cal_hi;
+
+			unsigned char calibrate;//флаг калиброванности		
 		} cal;
-		unsigned long serialize[3];//сериализованная часть структуры
+		unsigned long serialize[5];//
 	} calibrate;
 	
 } ;

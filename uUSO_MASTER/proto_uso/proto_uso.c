@@ -43,7 +43,7 @@ union //объединение для конвертирования char->long
 }
 sym_8_to_float;
 
-extern unsigned char idata i2c_buffer[6];
+//extern unsigned char idata i2c_buffer[6];
 extern unsigned char channel_number;//количество каналов
 
 //-----------------------------------------------------------------------------------
@@ -330,7 +330,7 @@ unsigned char  Channel_Get_Data_Order_M2(void) //using 0 //Выдать данные по кана
 unsigned char Channel_Set_Reset_State_Flags(void) //using 0 //	Установка/Сброс флагов состояния 
 {
 	STATE_BYTE=0x40;
-	i2c_buffer[0]=0x12;//сбросим флаг инициализации ведомого
+//	i2c_buffer[0]=0x12;//сбросим флаг инициализации ведомого
 	return	Request_Error(FR_SUCCESFUL);//ошибки нет, подтверждение
 }
 //-----------------------------------------------------------------------------
@@ -471,19 +471,19 @@ unsigned char Channel_Set_Calibrate(void)//установить верхнюю или нижнюю точку к
 	{
 		case 0:
 		{
-			Calibrate(RecieveBuf[6],K,C);	
+//			Calibrate(RecieveBuf[6],K,C);	
 		}
 		break;
 
 		case 1:
 		{
-			Calibrate_Set_Flag(RecieveBuf[6],RESET);
+//			Calibrate_Set_Flag(RecieveBuf[6],RESET);
 		}
 		break;
 
 		case 2:
 		{
-			Calibrate_Set_Flag(RecieveBuf[6],SET);	
+//			Calibrate_Set_Flag(RecieveBuf[6],SET);	
 		}
 		break;
 
@@ -520,14 +520,14 @@ unsigned char Channel_Get_Calibrate_Value(void)//получить коэфициенты калибровки
 
    TransferBuf[7]=channels[channel].calibrate.cal.calibrate;
 
-   sym_8_to_float.result_float=channels[channel].calibrate.cal.K;
+//   sym_8_to_float.result_float=channels[channel].calibrate.cal.K;
 
    	TransferBuf[11]=sym_8_to_float.result_char[0];
 	TransferBuf[10]=sym_8_to_float.result_char[1];
 	TransferBuf[9]=sym_8_to_float.result_char[2];
 	TransferBuf[8]=sym_8_to_float.result_char[3];
 
-   sym_8_to_float.result_float=channels[channel].calibrate.cal.C;
+ //  sym_8_to_float.result_float=channels[channel].calibrate.cal.C;
 
    	TransferBuf[15]=sym_8_to_float.result_char[0];
 	TransferBuf[14]=sym_8_to_float.result_char[1];

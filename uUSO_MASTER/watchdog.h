@@ -15,8 +15,8 @@ enum
 	Proto_Proc=0,
 	Sort_Proc= 1,
 	Watch_Proc=2,
-	I2C_RepeatRead_Proc=3,
-	Frequency_Measure_Proc=4,
+	Key_Proc=3,
+	Display_Proc=4,
 	I2C_Proc=5
 };
 
