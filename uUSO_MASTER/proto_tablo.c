@@ -11,16 +11,16 @@
 sbit DE_RE=P3^5;
 
 //-----------------------------------------------------------------------------------
-volatile unsigned char xdata DEV_NAME[DEVICE_NAME_LENGTH_SYM] ="<<uUSO_2>>"; //имя устройства
-volatile unsigned char xdata NOTICE[DEVICE_DESC_MAX_LENGTH_SYM]="<-- GEOSPHERA_2012 -->";//примечание 	
-volatile unsigned char xdata VERSION[DEVICE_VER_LENGTH_SYM] ="\x30\x30\x30\x30\x31";	// версия программы ПЗУ	не больше 5 байт
+//volatile unsigned char xdata DEV_NAME[DEVICE_NAME_LENGTH_SYM] ="<<uUSO_2>>"; //имя устройства
+//volatile unsigned char xdata NOTICE[DEVICE_DESC_MAX_LENGTH_SYM]="<-- GEOSPHERA_2012 -->";//примечание 	
+//volatile unsigned char xdata VERSION[DEVICE_VER_LENGTH_SYM] ="\x30\x30\x30\x30\x31";	// версия программы ПЗУ	не больше 5 байт
 
-volatile unsigned char xdata ADRESS_DEV=0x1;
+volatile unsigned char xdata ADRESS_DEV=0xF;//табло
 
-volatile unsigned char xdata dev_desc_len=20;//длина описания устройства
+//volatile unsigned char xdata dev_desc_len=20;//длина описания устройства
 //--------------------------------global variable------------------------------------
-volatile unsigned char idata	RECIEVED=0;//принято
-volatile unsigned char xdata    recieve_count;//счетчик приемного буфера
+//volatile unsigned char idata	RECIEVED=0;//принято
+//volatile unsigned char xdata    recieve_count;//счетчик приемного буфера
 volatile unsigned char xdata	transf_count;//счетчик передаваемых байтов	   
 volatile unsigned char xdata	buf_len;//длина передаваемого буфера
 
@@ -103,7 +103,7 @@ void Protocol_Init(void) //using 0
 //	Restore_Dev_Address_Desc();
 
 
-	recieve_count=0x0;//счетчик буфера приема
+//	recieve_count=0x0;//счетчик буфера приема
 	transf_count=0x0;//счетчик передаваемых байтов
 	buf_len=0x0;//длина передаваемого буфера
 	DE_RE=1;//линия на на передачу
@@ -597,6 +597,51 @@ void Protocol_Init(void) //using 0
 //  return;
 //}
 //-----------------------------------------------------------------------------------
+const unsigned char tablo_channels[CHANNEL_NUMBER]={0,1,2,3,4,5};//таблица номеров каналов индикаторов табло, вставить правильные
+unsigned char Tablo_Create_Frame(void)
+{
+   unsigned char i=0;
+   unsigned char counter=0;//счетчик символов кадра
+   unsigned char chr_buffer[8];
+  
+   TransferBuf[0]=0x00;TransferBuf[1]=0xD7;TransferBuf[2]=0x29;
+   TransferBuf[3]=ADRESS_DEV;  // адрес узла
+   TransferBuf[4]=CHANNEL_SET_PARAMETERS_REQ;  // код операции
+  // TransferBuf[5]=counter-6;//длина оставшейся части кадра
+
+   TransferBuf[6]=0x0;//номер канала
+   TransferBuf[7]=0x8F;//формат канала
+  // TransferBuf[8]=counter-9;//длина информации по каналу
+   //формирование канала
+
+   TransferBuf[9]=':';//заголовок кадра табло
+  // TransferBuf[10]=counter-15;//длина кадра табло
+   counter=11;
+   for(i=0;i<CHANNEL_NUMBER;i++)
+   {
+   		TransferBuf[counter]='[';
+		counter++;
+		TransferBuf[counter]=tablo_channels[i];
+		counter++;
+		counter+=sprintf(&TransferBuf[counter],"%3.1f",GetCalibrateVal(i,channels[i].channel_data));
+		TransferBuf[counter]=']';
+		counter++;		
+   }
+   TransferBuf[counter]=0x1;//номер канала
+   counter++;
+   TransferBuf[counter]=0x41;//формат канала
+   counter++;
+   TransferBuf[counter]=;//тип сигнала
+   counter++;
+   TransferBuf[counter]=CRC_Check(TransferBuf,counter);
+   counter++;
+
+   TransferBuf[5]=counter-6;//длина оставшейся части кадра
+   TransferBuf[8]=counter-9;//длина информации по каналу
+   TransferBuf[10]=counter-15;//длина кадра табло
+//	
+}
+//-----------------------------------------------------------------------------------
 //#pragma OT(0,Speed) 
 PT_THREAD(ProtoProcess(struct pt *pt))
  {
@@ -606,7 +651,7 @@ PT_THREAD(ProtoProcess(struct pt *pt))
   while(1) 
   {
   //----------restart------------
-		recieve_count=0x0;//??
+//		recieve_count=0x0;//??
 ////		REN=1;//recieve enqble
 //		DE_RE=1;//
 //		ES=1;
@@ -614,7 +659,7 @@ PT_THREAD(ProtoProcess(struct pt *pt))
 	  // PT_WAIT_UNTIL(pt,RECIEVED); //ждем команды на старт
 	   wdt_count[Proto_Proc].process_state=IDLE;
 
-	   PT_YIELD_UNTIL(pt,RECIEVED); //ждем команды на старт	
+//	   PT_YIELD_UNTIL(pt,RECIEVED); //ждем команды на старт	
 	   wdt_count[Proto_Proc].count++;
 //	  // WDT_Clear();//если посылка не приходит-сбрасываем
 //
@@ -640,7 +685,7 @@ PT_THREAD(ProtoProcess(struct pt *pt))
 //			PT_RESTART(pt);//перезапустим протокол	
 //		}
 //		else
-		{
+//		{
 			DE_RE=1; //переключаем RS485 в режим передачи
 							
 			REN=0;	//запрет приема-только передача
@@ -650,8 +695,8 @@ PT_THREAD(ProtoProcess(struct pt *pt))
 			transf_count++;//инкрементируем счетчик переданных
 			ES=1; //включим прерывание уарт	
 
-			PT_DELAY(pt,10);			
-		}
+//			PT_DELAY(pt,10);			
+//		}
 
 		
   //-----------------------------

@@ -81,31 +81,12 @@
 void UART_ISR(void); //обработчик прерывания уарт
 void Protocol_Init(void); //инициализация протокола
 
-unsigned char Send_Info(void);     //посылка информации об устройстве
-unsigned char Node_Full_Init(void);//полная инициализация узла
-unsigned char Channel_List_Init(void);//Инициализация списка каналов узла (без потери данных);
-unsigned char Channel_Get_Data(void);//Выдать данные по каналам, согласно абсолютной нумерации;
-unsigned char Channel_Set_Parameters(void);//Установить параметры по каналам, согласно абсолютной нумерации;
-unsigned char Channel_Set_Order_Query(void);//Задать последовательность опроса;
-unsigned char Channel_Get_Data_Order(void);//Выдать данные по каналам, согласно последовательности опроса;
-unsigned char Channel_Set_State(void);//Установить состояния по каналам, согласно абсолютной нумерации;
-unsigned char Channel_Get_Data_Order_M2(void);//Выдать данные по каналам, согласно последовательности опроса;
-unsigned char Channel_Set_Reset_State_Flags(void);//	Установка/Сброс флагов состояния 
-unsigned char Channel_All_Get_Data(void);//Выдать информацию по всем каналам узла (расширенный режим);
-unsigned char Channel_Set_Address_Desc(void);//установить новый адрес устройства, имя, описание, версию прошивки и комментарий
-unsigned char Channel_Set_Calibrate(void);//установить верхнюю или нижнюю точку калибровки
-unsigned char Channel_Set_All_Default(void);//установить настройки и калибровки каналов по умолчанию
-unsigned char Channel_Get_Calibrate_Value(void);//получить коэфициенты калибровки заданного канала
-unsigned char Request_Error(unsigned char error_code);//	Ошибочный запрос/ответ;
-
-
-void ProtoBufHandling(void); //процесс обработки принятого запроса
+unsigned char Tablo_Create_Frame(void);
 PT_THREAD(ProtoProcess(struct pt *pt));//главный процесс протокола
 
 static unsigned char  CRC_Check( unsigned char xdata *Spool,unsigned char Count);//расчет CRC
 
-void Store_Dev_Address_Desc(unsigned char addr,void* name,void* ver,void* desc,unsigned char desc_len);//сохранить в ППЗУ новый адрес устройства, имя, версию, описание
-void Restore_Dev_Address_Desc(void);//восстановить из ппзу адрес и информацию об устройстве
+
  //------------------------------------------------------------------------------
  extern struct Channel xdata channels[CHANNEL_NUMBER];//обобщенная структура каналов
  extern struct ADC_Channels xdata adc_channels[ADC_CHANNELS_NUM]; //каналы ацп
