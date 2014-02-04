@@ -41,6 +41,7 @@ struct Channel
 	
 	unsigned long channel_data;		  // значение канала
     float  channel_data_calibrate;//калиброванное значение канала
+	unsigned char string_buf[8];
 
 	union
 	{

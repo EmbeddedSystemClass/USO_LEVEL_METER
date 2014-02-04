@@ -50,18 +50,8 @@ PT_THREAD(KeyboardProcess(struct pt *pt))
 			if(key_1!=0)
 			{
 				menuKey(key_code);
-//				BIP=0;
-//				PT_DELAY(pt,1);
-//				BIP=1;
-//				PT_DELAY(pt,1);
-//				BIP=0;
-//				PT_DELAY(pt,1);
-//				BIP=1;
-//				PT_DELAY(pt,1);
-//				BIP=0;
-//				PT_DELAY(pt,1);
-//				BIP=1;
-				Beep(2);
+
+//				Beep(2);
 			}			
 		}
 	wdt_count[Key_Proc].count++;	
@@ -72,70 +62,27 @@ PT_THREAD(KeyboardProcess(struct pt *pt))
 
  unsigned char Key_Ask(void)
  {
- 	 KB_PI&=~KB_MASK;
-	 KB_PO|=KB_MASK;
-	 KB_PO&=(~(1<<0));	
+	KEY_1=KEY_2=KEY_3=KEY_4=0;	 //вход с подтяжкой к 1
 
-	 switch(KB_PI&KB_MASK)
-	 {
-	 	case 0x1E:{return '0';}break;
-		case 0x1D:{return '.';}break;
-		case 0x1B:{return 'P';}break;
-		case 0x17:{return '+';}break;
-		case 0x0F:{return '-';}break;
-	 }
-//
- 	 KB_PI&=~KB_MASK;
-	 KB_PO|=KB_MASK;
-	 KB_PO&=(~(1<<1));	
+	if(KEY_1)
+	{
+		return 'E';
+	}
 
-	 switch(KB_PI&KB_MASK)
-	 {
-	 	case 0x1E:{return '1';}break;
-		case 0x1D:{return '2';}break;
-		case 0x1B:{return '3';}break;
-		case 0x17:{return 'x';}break;
-		case 0x0F:{return '/';}break;
-	 }
+	if(KEY_2)
+	{
+		return 'Q';
+	}
 
- 	 KB_PI&=~KB_MASK;
-	 KB_PO|=KB_MASK;
-	 KB_PO&=(~(1<<2));	
+	if(KEY_3)
+	{
+		return '>';
+	}
 
-	 switch(KB_PI&KB_MASK)
-	 {
-	 	case 0x1E:{return '4';}break;
-		case 0x1D:{return '5';}break;
-		case 0x1B:{return '6';}break;
-		case 0x17:{return '=';}break;
-		case 0x0F:{return '>';}break;
-	 }
-
- 	 KB_PI&=~KB_MASK;
-	 KB_PO|=KB_MASK;
-	 KB_PO&=(~(1<<3));	
-
-	 switch(KB_PI&KB_MASK)
-	 {
-	 	case 0x1E:{return '7';}break;
-		case 0x1D:{return '8';}break;
-		case 0x1B:{return '9';}break;
-		case 0x17:{return '[';}break;
-		case 0x0F:{return ']';}break;
-	 }
-//
- 	 KB_PI&=~KB_MASK;
-	 KB_PO|=KB_MASK;
-	 KB_PO&=(~(1<<4));	
-
-	 switch(KB_PI&KB_MASK)
-	 {
-	 	case 0x1E:{return 'C';}break;
-		case 0x1D:{return 'B';}break;
-		case 0x1B:{return 'H';}break;
-		case 0x17:{return 'F';}break;
-		case 0x0F:{return 'A';}break;
-	 }
+	if(KEY_4)
+	{
+		return '+';
+	}
 
 	 return 0;
  }

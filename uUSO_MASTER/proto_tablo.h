@@ -81,7 +81,7 @@
 void UART_ISR(void); //обработчик прерывания уарт
 void Protocol_Init(void); //инициализация протокола
 
-unsigned char Tablo_Create_Frame(void);
+unsigned char Tablo_Output_Frame(void);
 PT_THREAD(ProtoProcess(struct pt *pt));//главный процесс протокола
 
 static unsigned char  CRC_Check( unsigned char xdata *Spool,unsigned char Count);//расчет CRC
