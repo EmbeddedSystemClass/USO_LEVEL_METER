@@ -46,10 +46,10 @@
 //sbit KB_In3 = KB_PI^3;
 //sbit KB_In4 = KB_PI^4;
 
-sbit KEY_1=P0^1;
-sbit KEY_2=P0^2;
-sbit KEY_3=P0^3;
-sbit KEY_4=P0^4;
+sbit KEY_1=P3^2;
+sbit KEY_2=P3^3;
+sbit KEY_3=P3^4;
+sbit KEY_4=P3^5;
 
 void KB_Initialize();
 unsigned char KB_ReadKey();

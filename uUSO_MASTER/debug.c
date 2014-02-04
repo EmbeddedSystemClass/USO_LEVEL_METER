@@ -12,6 +12,7 @@
 #include "frequency.h"
 
 #include "menu.h"
+#include "keyboard.h"
 #include "ulongsort.h"
 
 #include "calibrate/calibrate.h"
@@ -22,7 +23,7 @@
 //extern unsigned char idata i2c_buffer[6];
 
 //extern struct I2C_Channel xdata i2c_channels;
-extern struct pt pt_proto, pt_wdt,pt_display;
+extern struct pt pt_proto, pt_wdt,pt_display,pt_keyboard;
 volatile struct pt /*pt_i2c_read, pt_freq_measure,*/pt_sort;//,pt_i2c_process;
 
 
@@ -38,7 +39,7 @@ void main(void) //using 0
 	
 	PLLCON&=PLLCON_VAL;//настройка частоты процессора
 	
-	RestoreCalibrate();
+//	RestoreCalibrate();
 	
 	ChannelsInit();//инициализация настроек каналов
 	Protocol_Init();	
@@ -47,7 +48,7 @@ void main(void) //using 0
 	UART_Init();
 
 
-	WDT_Init(WDT_2000);//включить сторожевой таймер
+//	WDT_Init(WDT_2000);//включить сторожевой таймер
 
 	PT_INIT(&pt_sort);
 
@@ -61,7 +62,8 @@ void main(void) //using 0
 	
 		ulongsort_process(&pt_sort);
 		DisplayProcess(&pt_display);  
-		WDT_Process(&pt_wdt);	    
+//		WDT_Process(&pt_wdt);
+		KeyboardProcess(&pt_keyboard);	    
 	}
 }
 //-----------------------------------------------------------------------------
@@ -76,5 +78,6 @@ void Timer1_Interrupt(void) interrupt 3  //таймер шедулера
 	pt_sort.pt_time++;
 //	pt_proto.pt_time++;
 	pt_wdt.pt_time++;
+	pt_keyboard.pt_time++;
 	return;	
 }

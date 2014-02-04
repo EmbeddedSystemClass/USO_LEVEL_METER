@@ -29,20 +29,18 @@ void Beep(unsigned char time)
 PT_THREAD(KeyboardProcess(struct pt *pt))
  {
 
-//  static unsigned char i=0;
- // static unsigned int  key_code_1=0xFFFF,key_code_2=0xFFFF, last_key_code=0xFFFF;
   static unsigned char key_1, key_2, last_key=0;
 
   PT_BEGIN(pt);
   wdt_count[Key_Proc].process_state=RUN;
   while(1) 
   {  	
-		PT_DELAY(pt,5);
+		PT_DELAY(pt,50);
 		key_1= Key_Ask();
-		PT_DELAY(pt,5);
+		PT_DELAY(pt,50);
 		key_2= Key_Ask();			
 
-		if((key_1==key_2)&&(key_1!=last_key))
+		if((key_1==key_2)&&(key_1!=last_key)/*&&(key_1!=0x0)*/)
 		{
 			last_key=key_1;	
 			key_code=key_1;
@@ -54,6 +52,11 @@ PT_THREAD(KeyboardProcess(struct pt *pt))
 //				Beep(2);
 			}			
 		}
+
+//		if((key_1==0)&&(key_2==0))
+//		{
+//			last_key=0;
+//		}
 	wdt_count[Key_Proc].count++;	
   }
 
@@ -62,26 +65,27 @@ PT_THREAD(KeyboardProcess(struct pt *pt))
 
  unsigned char Key_Ask(void)
  {
-	KEY_1=KEY_2=KEY_3=KEY_4=0;	 //âõîä ñ ïîäòÿæêîé ê 1
+	KEY_1=KEY_2=KEY_3=KEY_4=1;	 //âõîä ñ ïîäòÿæêîé ê 1
 
-	if(KEY_1)
+	if(!KEY_1)
 	{
 		return 'E';
 	}
 
-	if(KEY_2)
+	if(!KEY_2)
 	{
 		return 'Q';
 	}
 
-	if(KEY_3)
+	if(!KEY_3)
 	{
 		return '>';
 	}
 
-	if(KEY_4)
+	if(!KEY_4)
 	{
-		return '+';
+//		return '+';
+return 0;
 	}
 
 	 return 0;

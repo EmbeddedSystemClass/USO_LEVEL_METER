@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <intrins.h>
 #include "crc_table.h"
-#include "channels.h"
+#include "proto_uso\channels.h"
 #include "watchdog.h"
 //-----------------------------------------------------------------------------------
 

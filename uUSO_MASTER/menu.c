@@ -19,16 +19,13 @@ extern volatile unsigned char xdata ADRESS_DEV;
 
 volatile struct pt pt_display;
 
-sbit LED=P0^6;
+//sbit LED=P0^6;
 
 
 enum
 {
 	DYN_NOT_DISPLAY=0,
 	DYN_DISPALY_ON =1
-//	DYN_DISPLAY_CH1=1,
-//	DYN_DISPLAY_CH2=2,
-//	DYN_DISPALY_CH3=3
 };
 
 
@@ -73,8 +70,8 @@ menuItem        Null_Menu = {(void*)0, (void*)0, (void*)0, (void*)0, 0, {0x00}};
 MAKE_MENU(m_s0i1,  NULL_ENTRY,NULL_ENTRY,  NULL_ENTRY, m_s1i1,       0, 	"DATA SCREEN");
 
 
-MAKE_MENU(m_s1i1,  m_s1i2,    NULL_ENTRY,  m_s0i1,     m_s2i1,       0, 					"Set");
-MAKE_MENU(m_s1i2,  NULL_ENTRY,m_s1i1,      m_s0i1,     m_s3i1,       MENU_SET_BRIGHTNESS,   "bri");
+MAKE_MENU(m_s1i1,  m_s1i2,    NULL_ENTRY,  m_s0i1,     m_s2i1,       0, 					"5Et");
+MAKE_MENU(m_s1i2,  NULL_ENTRY,m_s1i1,      m_s0i1,     m_s3i1,       MENU_SET_BRIGHTNESS,   "brI");
 
 // подменю Настройка каналов
 MAKE_MENU(m_s2i1,  m_s2i2,    NULL_ENTRY,  m_s1i1,     m_s3i1,       MENU_CHN1_SET, 		"Ch1");
@@ -86,35 +83,35 @@ MAKE_MENU(m_s2i6,  NULL_ENTRY,m_s2i5,      m_s1i1,     m_s8i1,   	 MENU_CHN6_SET
 
 
 // Настройка канала	 1
-MAKE_MENU(m_s3i1,  m_s3i2,    NULL_ENTRY,  m_s2i1,     NULL_ENTRY,   MENU_CHN1_CAL_HI, 		"Chi");
-MAKE_MENU(m_s3i2,  m_s3i3,    m_s3i1,      m_s2i1,     NULL_ENTRY,   MENU_CHN1_CAL_LO, 		"CLo");
-MAKE_MENU(m_s3i3,  m_s3i4,	  m_s3i2,      m_s2i1,     NULL_ENTRY,   MENU_CHN1_UST_HI, 		"Uhi");
-MAKE_MENU(m_s3i4,  NULL_ENTRY,m_s3i3,      m_s2i1,     NULL_ENTRY,   MENU_CHN1_UST_LO, 		"Ulo");
+MAKE_MENU(m_s3i1,  m_s3i2,    NULL_ENTRY,  m_s2i1,     NULL_ENTRY,   MENU_CHN1_CAL_HI, 		"ChI");
+MAKE_MENU(m_s3i2,  m_s3i3,    m_s3i1,      m_s2i1,     NULL_ENTRY,   MENU_CHN1_CAL_LO, 		"CLO");
+MAKE_MENU(m_s3i3,  m_s3i4,	  m_s3i2,      m_s2i1,     NULL_ENTRY,   MENU_CHN1_UST_HI, 		"UhI");
+MAKE_MENU(m_s3i4,  NULL_ENTRY,m_s3i3,      m_s2i1,     NULL_ENTRY,   MENU_CHN1_UST_LO, 		"ULO");
 // Настройка канала	 2
-MAKE_MENU(m_s4i1,  m_s4i2,    NULL_ENTRY,  m_s2i2,     NULL_ENTRY,   MENU_CHN2_CAL_HI, 		"Chi");
-MAKE_MENU(m_s4i2,  m_s4i3,    m_s4i1,      m_s2i2,     NULL_ENTRY,   MENU_CHN2_CAL_LO, 		"CLo");
-MAKE_MENU(m_s4i3,  m_s4i4,	  m_s4i2,      m_s2i2,     NULL_ENTRY,   MENU_CHN2_UST_HI, 		"Uhi");
-MAKE_MENU(m_s4i4,  NULL_ENTRY,m_s4i3,      m_s2i2,     NULL_ENTRY,   MENU_CHN2_UST_LO, 		"Ulo");
+MAKE_MENU(m_s4i1,  m_s4i2,    NULL_ENTRY,  m_s2i2,     NULL_ENTRY,   MENU_CHN2_CAL_HI, 		"ChI");
+MAKE_MENU(m_s4i2,  m_s4i3,    m_s4i1,      m_s2i2,     NULL_ENTRY,   MENU_CHN2_CAL_LO, 		"CLO");
+MAKE_MENU(m_s4i3,  m_s4i4,	  m_s4i2,      m_s2i2,     NULL_ENTRY,   MENU_CHN2_UST_HI, 		"UhI");
+MAKE_MENU(m_s4i4,  NULL_ENTRY,m_s4i3,      m_s2i2,     NULL_ENTRY,   MENU_CHN2_UST_LO, 		"ULO");
 // Настройка канала	 3
-MAKE_MENU(m_s5i1,  m_s5i2,    NULL_ENTRY,  m_s2i3,     NULL_ENTRY,   MENU_CHN3_CAL_HI, 		"Chi");
-MAKE_MENU(m_s5i2,  m_s5i3,    m_s5i1,      m_s2i3,     NULL_ENTRY,   MENU_CHN3_CAL_LO, 		"CLo");
-MAKE_MENU(m_s5i3,  m_s5i4,	  m_s5i2,      m_s2i3,     NULL_ENTRY,   MENU_CHN3_UST_HI, 		"Uhi");
-MAKE_MENU(m_s5i4,  NULL_ENTRY,m_s5i3,      m_s2i3,     NULL_ENTRY,   MENU_CHN3_UST_LO, 		"Ulo");
+MAKE_MENU(m_s5i1,  m_s5i2,    NULL_ENTRY,  m_s2i3,     NULL_ENTRY,   MENU_CHN3_CAL_HI, 		"ChI");
+MAKE_MENU(m_s5i2,  m_s5i3,    m_s5i1,      m_s2i3,     NULL_ENTRY,   MENU_CHN3_CAL_LO, 		"CLO");
+MAKE_MENU(m_s5i3,  m_s5i4,	  m_s5i2,      m_s2i3,     NULL_ENTRY,   MENU_CHN3_UST_HI, 		"UhI");
+MAKE_MENU(m_s5i4,  NULL_ENTRY,m_s5i3,      m_s2i3,     NULL_ENTRY,   MENU_CHN3_UST_LO, 		"ULO");
 // Настройка канала	 4
-MAKE_MENU(m_s6i1,  m_s6i2,    NULL_ENTRY,  m_s2i4,     NULL_ENTRY,   MENU_CHN4_CAL_HI, 		"Chi");
-MAKE_MENU(m_s6i2,  m_s6i3,    m_s6i1,      m_s2i4,     NULL_ENTRY,   MENU_CHN4_CAL_LO, 		"CLo");
-MAKE_MENU(m_s6i3,  m_s6i4,	  m_s6i2,      m_s2i4,     NULL_ENTRY,   MENU_CHN4_UST_HI, 		"Uhi");
-MAKE_MENU(m_s6i4,  NULL_ENTRY,m_s6i3,      m_s2i4,     NULL_ENTRY,   MENU_CHN4_UST_LO, 		"Ulo");
+MAKE_MENU(m_s6i1,  m_s6i2,    NULL_ENTRY,  m_s2i4,     NULL_ENTRY,   MENU_CHN4_CAL_HI, 		"ChI");
+MAKE_MENU(m_s6i2,  m_s6i3,    m_s6i1,      m_s2i4,     NULL_ENTRY,   MENU_CHN4_CAL_LO, 		"CLO");
+MAKE_MENU(m_s6i3,  m_s6i4,	  m_s6i2,      m_s2i4,     NULL_ENTRY,   MENU_CHN4_UST_HI, 		"UhI");
+MAKE_MENU(m_s6i4,  NULL_ENTRY,m_s6i3,      m_s2i4,     NULL_ENTRY,   MENU_CHN4_UST_LO, 		"ULO");
 // Настройка канала	 5
-MAKE_MENU(m_s7i1,  m_s7i2,    NULL_ENTRY,  m_s2i5,     NULL_ENTRY,   MENU_CHN5_CAL_HI, 		"Chi");
-MAKE_MENU(m_s7i2,  m_s7i3,    m_s7i1,      m_s2i5,     NULL_ENTRY,   MENU_CHN5_CAL_LO, 		"CLo");
-MAKE_MENU(m_s7i3,  m_s7i4,	  m_s7i2,      m_s2i5,     NULL_ENTRY,   MENU_CHN5_UST_HI, 		"Uhi");
-MAKE_MENU(m_s7i4,  NULL_ENTRY,m_s7i3,      m_s2i5,     NULL_ENTRY,   MENU_CHN5_UST_LO, 		"Ulo");
+MAKE_MENU(m_s7i1,  m_s7i2,    NULL_ENTRY,  m_s2i5,     NULL_ENTRY,   MENU_CHN5_CAL_HI, 		"ChI");
+MAKE_MENU(m_s7i2,  m_s7i3,    m_s7i1,      m_s2i5,     NULL_ENTRY,   MENU_CHN5_CAL_LO, 		"CLO");
+MAKE_MENU(m_s7i3,  m_s7i4,	  m_s7i2,      m_s2i5,     NULL_ENTRY,   MENU_CHN5_UST_HI, 		"UhI");
+MAKE_MENU(m_s7i4,  NULL_ENTRY,m_s7i3,      m_s2i5,     NULL_ENTRY,   MENU_CHN5_UST_LO, 		"ULO");
 // Настройка канала	 6
-MAKE_MENU(m_s8i1,  m_s8i2,    NULL_ENTRY,  m_s2i5,     NULL_ENTRY,   MENU_CHN6_CAL_HI, 		"Chi");
-MAKE_MENU(m_s8i2,  m_s8i3,    m_s8i1,      m_s2i5,     NULL_ENTRY,   MENU_CHN6_CAL_LO, 		"CLo");
-MAKE_MENU(m_s8i3,  m_s8i4,	  m_s8i2,      m_s2i5,     NULL_ENTRY,   MENU_CHN6_UST_HI, 		"Uhi");
-MAKE_MENU(m_s8i4,  NULL_ENTRY,m_s8i3,      m_s2i5,     NULL_ENTRY,   MENU_CHN6_UST_LO, 		"Ulo");
+MAKE_MENU(m_s8i1,  m_s8i2,    NULL_ENTRY,  m_s2i6,     NULL_ENTRY,   MENU_CHN6_CAL_HI, 		"ChI");
+MAKE_MENU(m_s8i2,  m_s8i3,    m_s8i1,      m_s2i6,     NULL_ENTRY,   MENU_CHN6_CAL_LO, 		"CLO");
+MAKE_MENU(m_s8i3,  m_s8i4,	  m_s8i2,      m_s2i6,     NULL_ENTRY,   MENU_CHN6_UST_HI, 		"UhI");
+MAKE_MENU(m_s8i4,  NULL_ENTRY,m_s8i3,      m_s2i6,     NULL_ENTRY,   MENU_CHN6_UST_LO, 		"ULO");
 
 
 
@@ -132,19 +129,18 @@ enum
 	CAL_FLOAT_HI
 };
 
-struct input_field
-{
-	unsigned char input_char_buf[2*INPUT_CHAR_BUF_LEN+1];
-	unsigned char char_count;
-	unsigned char has_point;
-};
+//struct input_field
+//{
+//	unsigned char input_char_buf[2*INPUT_CHAR_BUF_LEN+1];
+//	unsigned char char_count;
+//	unsigned char has_point;
+//};
+//
+//volatile struct input_field input_field_lo={"      ",0,0};
+//volatile struct input_field input_field_hi={"      ",0,0};
+//
+//volatile struct input_field *input_field_ptr;
 
-volatile struct input_field input_field_lo={"      ",0,0};
-volatile struct input_field input_field_hi={"      ",0,0};
-
-volatile struct input_field *input_field_ptr;
-
-unsigned char cal_float;//верхнее или нижнее значение
 
 unsigned char menuHandler(menuItem* currentMenuItem,unsigned int key);	 //обработка меню
 void CalibrationKey(unsigned char key,unsigned char channel);
@@ -164,16 +160,9 @@ void menuChange(menuItem code* NewMenu)
 
 unsigned char dispMenu(void)
 {
-xdata menuItem code * tempMenu, *tempMenu2;
+	unsigned char i=0;
 
-	// первая строка - заголовок. Или пункт меню верхнего уровня
-
-
-	tempMenu = selectedMenuItem;//->Parent;
-
-
-
-	if ((tempMenu == &m_s0i1)) 
+	if (selectedMenuItem == &m_s0i1) 
 	{ // мы на верхнем уровне
 		dynamic_disp= DYN_DISPALY_ON;
 	} 
@@ -182,23 +171,13 @@ xdata menuItem code * tempMenu, *tempMenu2;
 		dynamic_disp=DYN_NOT_DISPLAY;
 
 
-
-//		tempMenu2=tempMenu->Previous;
-//		if(tempMenu2!=&NULL_ENTRY)
-//		{
-//
-//		}
-//		
-//
-//
-//		tempMenu2=tempMenu->Next;
-//		if(tempMenu2!=&NULL_ENTRY)
-//		{
-//
-//	
-//			tempMenu2=tempMenu2->Next;
-//
-//		}
+	    for(i=0;i<CHANNEL_NUMBER;i++)
+	    {
+			sprintf(channels[i].string_buf,"   ");
+		}
+	//	sprintf(channels[0].string_buf,(const unsigned char *)selectedMenuItem->Text);
+		memcpy(channels[0].string_buf,(const unsigned char *)selectedMenuItem->Text,3);
+		Tablo_Output_Frame();
 	}
 	return (1);
 }
@@ -208,90 +187,81 @@ unsigned char menuKey(unsigned char key)
 	menuItem* sel;
 
 
-//	if(!flag_menu_entry)
-//	{
-//		switch (key) 
-//		{
-//			case 0: 
-//			{
-//				return 1;
-//			}
-//			break;
-//		
-//			case '[': 
-//			{
-//				menuChange(PREVIOUS);
-//	
-//			}
-//			break;
-//		
-//			case ']': 
-//			{
-//				menuChange(NEXT);			
-//			}
-//			break;
-//		
-//			case 'x':
-//			{
-//			  _nop_();
-//			}
-//			break;
-//		
-//			case 'F':
-//			{ // выбор пункта					
-//					sel = selectedMenuItem->Select;//SELECT;
-//					if (selectedMenuItem->Select != 0) 
-//					{
-//						menuHandler(selectedMenuItem,key);	
-//						return (1);
-//					} 
-//					else 
-//					{
-//						menuChange(CHILD);
-//					}
-//			}
-//			break;
-//	
-//			case 'C': 
-//			{ // отмена выбора (возврат)
-//				menuChange(PARENT);
-////				//LCD_WriteCommand(LCD_CMD_ON);
-//			}
-//			break;
-//	
-//			default:
-//			{
-//	
-//			}		
-//		} 
-//	
-//		if(key!=0)
-//	   	{
-//			//LCD_WriteCommand(LCD_CMD_CLEAR);
-//		//	delay(10);
-//			dispMenu(); 
-//		}
-//	}
-//	else
-//	{
-//		if(key== 'C') 
-//		{ // отмена выбора (возврат)
-//	
-//			flag_menu_entry=0;
+	if(!flag_menu_entry)
+	{
+		switch (key) 
+		{
+			case 0: 
+			{
+				return 1;
+			}
+			break;
+		
+			case '+': 
+			{
+				menuChange(PREVIOUS);
+	
+			}
+			break;
+		
+			case '>': 
+			{
+				menuChange(NEXT);			
+			}
+			break;
+		
+		
+			case 'E':
+			{ // выбор пункта					
+					sel = selectedMenuItem->Select;//SELECT;
+					if (selectedMenuItem->Select != 0) 
+					{
+						menuHandler(selectedMenuItem,key);	
+						return (1);
+					} 
+					else 
+					{
+						menuChange(CHILD);
+					}
+			}
+			break;
+	
+			case 'Q': 
+			{ // отмена выбора (возврат)
+				menuChange(PARENT);
+			}
+			break;
+	
+			default:
+			{
+	
+			}		
+		} 
+	
+		if(key!=0)
+	   	{
+			dispMenu(); 
+		}
+	}
+	else
+	{
+		if(key== 'Q') 
+		{ // отмена выбора (возврат)
+	
+			flag_menu_entry=0;
 //			dynamic_disp=DYN_NOT_DISPLAY;
-//
-//			dispMenu(); 
-//		}
-//		else
-//		{
-//			sel = SELECT;
-//			if (sel != 0) 
-//			{
-//				menuHandler(selectedMenuItem,key);
-//			}
-//			 
-//		}
-//	}
+
+			dispMenu(); 
+		}
+		else
+		{
+			sel = SELECT;
+			if (sel != 0) 
+			{
+				menuHandler(selectedMenuItem,key);
+			}			 
+		}
+	}
 	return (1);
 }
 //-----------------------------------------------------
