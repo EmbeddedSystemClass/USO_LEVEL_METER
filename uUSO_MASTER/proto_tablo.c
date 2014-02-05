@@ -28,6 +28,8 @@ volatile unsigned char xdata  STATE_BYTE=0xC0;//байт состояния устройства
 volatile unsigned char idata symbol=0xFF;//принятый символ
 
 volatile struct pt pt_proto;
+
+unsigned char brightness=0x1;
 //-----------------------------------------------------------------------------------
 
 void UART_ISR(void) interrupt 4 //using 1
@@ -142,7 +144,7 @@ unsigned char Tablo_Output_Frame(void)
 		TransferBuf[counter]='*';
 		counter++;
 
-   		TransferBuf[counter]=0xF;
+   		TransferBuf[counter]=brightness&0xF;//0xF;
 		counter++;
 		
 		TransferBuf[counter]=']';
@@ -174,44 +176,5 @@ unsigned char Tablo_Output_Frame(void)
 //	
 }
 //-----------------------------------------------------------------------------------
-//#pragma OT(0,Speed) 
-//PT_THREAD(ProtoProcess(struct pt *pt))
-// {
-//
-//  PT_BEGIN(pt);
-//
-//  while(1) 
-//  {
-//  //----------restart------------
-////		recieve_count=0x0;//??
-//////		REN=1;//recieve enqble
-////		DE_RE=1;//
-////		ES=1;
-//  //-----------------------------
-//	  // PT_WAIT_UNTIL(pt,RECIEVED); //ждем команды на старт
-//	   wdt_count[Proto_Proc].process_state=IDLE;
-//
-////	   PT_YIELD_UNTIL(pt,RECIEVED); //ждем команды на старт	
-//	   wdt_count[Proto_Proc].count++;
-//
-//			buf_len=Tablo_Create_Frame();
-//			
-//			DE_RE=1; //переключаем RS485 в режим передачи
-//							
-//			REN=0;	//запрет приема-только передача
-//			transf_count=0;
-//			CUT_OUT_NULL=0;
-//			SBUF=TransferBuf[transf_count];//передача байта, остальным займется автомат
-//			transf_count++;//инкрементируем счетчик переданных
-//			ES=1; //включим прерывание уарт	
-//
-//			PT_DELAY(pt,500);			
-////		}
-//
-//		
-//  //-----------------------------
-//  }
-//
-// PT_END(pt);
-//}
+
 

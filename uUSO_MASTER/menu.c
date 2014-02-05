@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <intrins.h>
 
-#include "proto_uso/proto_uso.h"
+#include "proto_tablo.h"
 #include "proto_uso/channels.h"
 #include <string.h>
 #include "calibrate/calibrate.h"
@@ -15,14 +15,15 @@
 #define DISPLAY_HEIGHT	4
 
 extern struct Channel xdata channels[CHANNEL_NUMBER];//обобщенная структура каналов
-extern volatile unsigned char xdata ADRESS_DEV;
+//extern volatile unsigned char xdata ADRESS_DEV;
+extern unsigned char brightness	;
 
 volatile struct pt pt_display;
 
-sbit LED1=P0^0;
-sbit LED2=P0^1;
-sbit LED3=P0^2;
-sbit LED4=P0^3;
+//sbit LED1=P0^0;
+//sbit LED2=P0^1;
+//sbit LED3=P0^2;
+//sbit LED4=P0^3;
 
 
 enum
@@ -145,12 +146,15 @@ enum
 //volatile struct input_field *input_field_ptr;
 
 
-unsigned char menuHandler(menuItem* currentMenuItem,unsigned int key);	 //обработка меню
+unsigned char menuHandler(menuItem* currentMenuItem,unsigned char key);	 //обработка меню
 void CalibrationKey(unsigned char key,unsigned char channel);
 void CalibrationScreen(unsigned char channel);//экран калибровки канала
 
 void SettingsKey(unsigned char key);
 void SettingsScreen(void);
+
+void SetBrightnessKey(unsigned char key);
+void SetBrightnessScreen(void);
 
 void menuChange(menuItem code* NewMenu)
 {
@@ -164,7 +168,7 @@ void menuChange_NEXT(void)
 {
 	xdata menuItem code * tempMenu;
 
-	if(selectedMenuItem->Next==&NULL_ENTRY)
+	if((selectedMenuItem->Next==&NULL_ENTRY)&&(selectedMenuItem->Parent!=&NULL_ENTRY))
 	{
 		tempMenu = selectedMenuItem->Parent;
 		menuChange(tempMenu->Child);	
@@ -218,17 +222,18 @@ unsigned char menuKey(unsigned char key)
 			case '>': 
 			{
 			//	menuChange(NEXT);
-			menuChange_NEXT();		
+				menuChange_NEXT();		
 			}
 			break;
 		
 		
 			case 'E':
 			{ // выбор пункта	
-			LED1=~LED1;				
+//			LED1=~LED1;				
 //					sel = selectedMenuItem->Select;//SELECT;
 					if (selectedMenuItem->Select != 0) 
 					{
+//						flag_menu_entry=1;
 						menuHandler(selectedMenuItem,key);	
 						return (1);
 					} 
@@ -272,95 +277,17 @@ unsigned char menuKey(unsigned char key)
 }
 //-----------------------------------------------------
 
-unsigned char menuHandler(menuItem* currentMenuItem,unsigned int key)	 //обработка меню
+unsigned char menuHandler(menuItem* currentMenuItem,unsigned char key)	 //обработка меню
 {
 	flag_menu_entry=1;
 	
 	switch (currentMenuItem->Select) 
 	{
-//		case MENU_DEV_SET:
-//		{	
-//			SettingsKey(key);
-//		}
-//		break; 
-//
-//		case MENU_CHN1_CAL:
-//		{
-//			CalibrationKey(key,0);	
-//		}
-//		break;
-//
-//		case MENU_CHN2_CAL:
-//		{
-//			CalibrationKey(key,1);	
-//		}
-//		break;
-//
-//		case MENU_CHN3_CAL:
-//		{
-//			CalibrationKey(key,2);	
-//		}
-//		break;
-//
-//		case MENU_CHN4_CAL:
-//		{
-//			CalibrationKey(key,3);	
-//		}
-//		break;
-//
-//		case MENU_CHN5_CAL:
-//		{
-//			CalibrationKey(key,4);	
-//		}
-//		break;
-//
-//		case MENU_CHN6_CAL:
-//		{
-//			CalibrationKey(key,5);	
-//		}
-//		break;
-//
-//		case MENU_CHN7_CAL:
-//		{
-//			CalibrationKey(key,6);	
-//		}
-//		break;
-//
-//		case MENU_CHN8_CAL:
-//		{
-//			CalibrationKey(key,7);	
-//		}
-//		break;
-//
-//		case MENU_CHN_DOL_CAL:
-//		{
-//			CalibrationKey(key,11);	
-//		}
-//		break;
-//
-//		case MENU_CHN_FREQ1_CAL:
-//		{
-//			CalibrationKey(key,8);	
-//		}
-//		break;
-//
-//		case MENU_CHN_FREQ2_CAL:
-//		{
-//			CalibrationKey(key,9);	
-//		}
-//		break;
-//
-//		case MENU_CHN_FREQ3_CAL:
-//		{
-//			CalibrationKey(key,10);	
-//		}
-//		break;
-//
-//		case MENU_CHN_FREQ_HI_CAL:
-//		{
-//			CalibrationKey(key,12);	
-//		}
-//		break;
+		case MENU_SET_BRIGHTNESS:
+		{	
+			SetBrightnessKey(key);
+		}
+		break; 
 	}	
 	return 0;
 }
@@ -372,6 +299,50 @@ unsigned char startMenu(void)
 	dispMenu();
 	PT_INIT(&pt_display);
 	return 0;
+}
+//-------------------------------------------------------
+void SetBrightnessKey(unsigned char key)
+{
+//		brightness=(brightness+1)&0xF;
+		switch(key)
+		{
+			case 'E'://enter
+			{
+				//сохранить параметр в eeprom
+			}
+			break;
+
+//			case 'Q'//quit
+//			{
+//			}
+//			break;
+
+			case '>'://shift
+			{
+				brightness=(brightness+1)&0xF;
+			}
+			break;
+
+			case '+'://increment
+			{
+			}
+			break;
+		}
+		SetBrightnessScreen();
+}
+
+void SetBrightnessScreen(void)
+{
+		unsigned char i;
+		dynamic_disp=DYN_NOT_DISPLAY;
+	    for(i=0;i<CHANNEL_NUMBER;i++)
+	    {
+			//sprintf(channels[i].string_buf,"   ");
+			memset(channels[i].string_buf,' ',3);
+			channels[i].string_buf[3]=0;
+		}
+		//memcpy(channels[0].string_buf,selectedMenuItem->Text,4);
+		sprintf(channels[0].string_buf," % 3bu",brightness);
 }
 //-------------------------------------------------------
 //void CalibrationKey(unsigned char key,unsigned char channel)
