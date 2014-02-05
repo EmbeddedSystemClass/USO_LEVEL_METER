@@ -133,6 +133,14 @@ enum
 	CAL_FLOAT_HI
 };
 
+enum
+{
+	CAL_HI=0,
+	CAL_LO,
+	UST_HI,
+	UST_LO
+};
+
 //struct input_field
 //{
 //	unsigned char input_char_buf[2*INPUT_CHAR_BUF_LEN+1];
@@ -147,11 +155,12 @@ enum
 
 
 unsigned char menuHandler(menuItem* currentMenuItem,unsigned char key);	 //обработка меню
-void CalibrationKey(unsigned char key,unsigned char channel);
+
+void CalibrationKey(unsigned char key,unsigned char channel,unsigned char type);
 void CalibrationScreen(unsigned char channel);//экран калибровки канала
 
-void SettingsKey(unsigned char key);
-void SettingsScreen(void);
+//void SettingsKey(unsigned char key);
+//void SettingsScreen(void);
 
 void SetBrightnessKey(unsigned char key);
 void SetBrightnessScreen(void);
@@ -287,6 +296,157 @@ unsigned char menuHandler(menuItem* currentMenuItem,unsigned char key)	 //обрабо
 		{	
 			SetBrightnessKey(key);
 		}
+		break;
+
+		
+		case MENU_CHN1_CAL_HI:
+		{
+			CalibrationKey(key,0,CAL_HI);
+		}
+		break; 
+
+		case MENU_CHN1_CAL_LO:
+		{
+			CalibrationKey(key,0,CAL_LO);
+		}
+		break; 
+
+		case MENU_CHN1_UST_HI:
+		{
+			CalibrationKey(key,0,UST_HI);
+		}
+		break; 
+
+		case MENU_CHN1_UST_LO:
+		{
+			CalibrationKey(key,0,UST_LO);
+		}
+		break; 
+
+		
+		
+		case MENU_CHN2_CAL_HI:
+		{
+			CalibrationKey(key,1,CAL_HI);
+		}
+		break; 
+
+		case MENU_CHN2_CAL_LO:
+		{
+			CalibrationKey(key,1,CAL_LO);
+		}
+		break; 
+
+		case MENU_CHN2_UST_HI:
+		{
+			CalibrationKey(key,1,UST_HI);
+		}
+		break; 
+
+		case MENU_CHN2_UST_LO:
+		{
+			CalibrationKey(key,1,UST_LO);
+		}
+		break;
+
+
+		case MENU_CHN3_CAL_HI:
+		{
+			CalibrationKey(key,2,CAL_HI);
+		}
+		break; 
+
+		case MENU_CHN3_CAL_LO:
+		{
+			CalibrationKey(key,2,CAL_LO);
+		}
+		break; 
+
+		case MENU_CHN3_UST_HI:
+		{
+			CalibrationKey(key,2,UST_HI);
+		}
+		break; 
+
+		case MENU_CHN3_UST_LO:
+		{
+			CalibrationKey(key,2,UST_LO);
+		}
+		break;
+
+
+		case MENU_CHN4_CAL_HI:
+		{
+			CalibrationKey(key,3,CAL_HI);
+		}
+		break; 
+
+		case MENU_CHN4_CAL_LO:
+		{
+			CalibrationKey(key,3,CAL_LO);
+		}
+		break; 
+
+		case MENU_CHN4_UST_HI:
+		{
+			CalibrationKey(key,3,UST_HI);
+		}
+		break; 
+
+		case MENU_CHN4_UST_LO:
+		{
+			CalibrationKey(key,3,UST_LO);
+		}
+		break; 
+
+
+		case MENU_CHN5_CAL_HI:
+		{
+			CalibrationKey(key,4,CAL_HI);
+		}
+		break; 
+
+		case MENU_CHN5_CAL_LO:
+		{
+			CalibrationKey(key,4,CAL_LO);
+		}
+		break; 
+
+		case MENU_CHN5_UST_HI:
+		{
+			CalibrationKey(key,4,UST_HI);
+		}
+		break; 
+
+		case MENU_CHN5_UST_LO:
+		{
+			CalibrationKey(key,4,UST_LO);
+		}
+		break; 
+
+
+		case MENU_CHN6_CAL_HI:
+		{
+			CalibrationKey(key,5,CAL_HI);
+		}
+		break; 
+
+		case MENU_CHN6_CAL_LO:
+		{
+			CalibrationKey(key,5,CAL_LO);
+		}
+		break; 
+
+		case MENU_CHN6_UST_HI:
+		{
+			CalibrationKey(key,5,UST_HI);
+		}
+		break; 
+
+		case MENU_CHN6_UST_LO:
+		{
+			CalibrationKey(key,5,UST_LO);
+		}
 		break; 
 	}	
 	return 0;
@@ -303,7 +463,6 @@ unsigned char startMenu(void)
 //-------------------------------------------------------
 void SetBrightnessKey(unsigned char key)
 {
-//		brightness=(brightness+1)&0xF;
 		switch(key)
 		{
 			case 'E'://enter
@@ -345,294 +504,53 @@ void SetBrightnessScreen(void)
 		sprintf(channels[0].string_buf," % 3bu",brightness);
 }
 //-------------------------------------------------------
-//void CalibrationKey(unsigned char key,unsigned char channel)
-//{
-//		switch(key)
-//		{
-//			case 'F':
-//			{				
-//				//LCD_WriteCommand(LCD_CMD_CLEAR);
-//
-//				dynamic_disp= DYN_DISPALY_ON;
-//
-//				input_field_hi.char_count=INPUT_CHAR_BUF_LEN;
-//				input_field_lo.char_count=INPUT_CHAR_BUF_LEN;
-//
-//				sprintf(input_field_hi.input_char_buf,"%5.4f",channels[channel].calibrate.cal.cal_hi);
-//				sprintf(input_field_lo.input_char_buf,"%5.4f",channels[channel].calibrate.cal.cal_lo);	
-//				
-//				if(strchr (input_field_hi.input_char_buf,'.'))
-//				{
-//					input_field_hi.has_point=1;
-//				}			
-//				else
-//				{
-//					input_field_hi.has_point=0;
-//				}
-//
-//				if(strchr (input_field_lo.input_char_buf,'.'))
-//				{
-//					input_field_lo.has_point=1;
-//				}			
-//				else
-//				{
-//					input_field_lo.has_point=0;
-//				}
-//
-//				input_field_hi.input_char_buf[INPUT_CHAR_BUF_LEN]=0;
-//				input_field_lo.input_char_buf[INPUT_CHAR_BUF_LEN]=0;
-//
-//				input_field_ptr=&input_field_lo;
-//
-//			}
-//			break;
-//
-//			case '[':
-//			{
-//				input_field_ptr=&input_field_lo;
-//			}
-//			break;
-//
-//			case ']':
-//			{
-//				input_field_ptr=&input_field_hi;
-//			}
-//			break;
-//
-//			case '=':
-//			{
-//				if((input_field_ptr->input_char_buf[0]!=' ')/*&&(input_field_ptr->input_char_buf[0]!='-')*/)
-//				{
-//					if(input_field_ptr==&input_field_lo)
-//					{	
-//						sscanf(input_field_lo.input_char_buf,"%f",&channels[channel].calibrate.cal.cal_lo);
-//						SetFirstPoint(channel,channels[channel].channel_data,channels[channel].calibrate.cal.cal_lo);
-//					}
-//					else
-//					{
-//						sscanf(input_field_hi.input_char_buf,"%f",&channels[channel].calibrate.cal.cal_hi);
-//						SetSecondPoint(channel,channels[channel].channel_data,channels[channel].calibrate.cal.cal_hi);
-//					}
-//				}
-//			}
-//			break;
-//
-//			case '/':
-//			{
-//				if(input_field_ptr->char_count)
-//				{
-//					input_field_ptr->input_char_buf[input_field_ptr->char_count-1]=' ';
-//					input_field_ptr->char_count--;
-//				}
-//				
-//				if(strchr (input_field_ptr->input_char_buf,'.'))
-//				{
-//					input_field_ptr->has_point=1;
-//				}			
-//				else
-//				{
-//					input_field_ptr->has_point=0;
-//				}				
-//			}
-//			break;
-//		}
-//
-//		if(input_field_ptr->char_count<INPUT_CHAR_BUF_LEN)
-//		{
-//			if((key>='0') && (key<='9'))
-//			{
-//				   input_field_ptr->input_char_buf[input_field_ptr->char_count]=key;
-//				   input_field_ptr->char_count++;
-//			}
-//			
-//			if(key=='.')
-//			{
-//				   if((input_field_ptr->has_point==0)&&(input_field_ptr->char_count!=0)&&(input_field_ptr->char_count<(INPUT_CHAR_BUF_LEN)))
-//				   {
-//				   	   input_field_ptr->input_char_buf[input_field_ptr->char_count]='.';
-//				   	   input_field_ptr->char_count++;
-//					   input_field_ptr->has_point=1;
-//				   }			
-//			}
-//	
-//			if(key=='-')
-//			{
-//				   if(input_field_ptr->char_count==0)
-//				   {
-//					   input_field_ptr->input_char_buf[input_field_ptr->char_count]='-';
-//					   input_field_ptr->char_count++;
-//				   }			
-//			}
-//		}
-//		else
-//		{
-//			 input_field_ptr->char_count=INPUT_CHAR_BUF_LEN/*-1*/;
-//		}
-//		CalibrationScreen(channel);		
-//}
-//
-//
-//void CalibrationScreen(unsigned char channel)//экран калибровки канала
-//{
-////   sprintf(&string_buf,"Chn. val.:% 8lu",channels[channel].channel_data);
-////   //LCD_WriteAC(LCD_1_STR_ADDR);
-////   //LCD_WriteString(&string_buf);
-//
-// 	if(input_field_ptr==&input_field_lo)
-//	{
-//			//LCD_WriteAC(LCD_1_STR_ADDR);
-//			sprintf(&string_buf,"Low val [%6s]",input_field_lo.input_char_buf);
-//			//LCD_WriteString(&string_buf);
-//
-//			//LCD_WriteAC(LCD_2_STR_ADDR);
-//			sprintf(&string_buf,"High val %6s ",input_field_hi.input_char_buf);
-//			//LCD_WriteString(&string_buf);
-//
-//			//LCD_WriteAC(LCD_4_STR_ADDR);
-//			sprintf(&string_buf,"'='-Enter,'/'-Del");
-//			//LCD_WriteString(&string_buf);
-//
-//			//LCD_WriteAC(LCD_1_STR_ADDR+9+input_field_lo.char_count);
-//			//LCD_WriteCommand(LCD_CMD_CURSOR);
-//	}
-//
-//	if(input_field_ptr==&input_field_hi)
-//	{
-//			//LCD_WriteAC(LCD_1_STR_ADDR);
-//			sprintf(&string_buf,"Low val  %6s ",input_field_lo.input_char_buf);
-//			//LCD_WriteString(&string_buf); 
-//
-//			//LCD_WriteAC(LCD_2_STR_ADDR);
-//			sprintf(&string_buf,"High val[%6s]",input_field_hi.input_char_buf);
-//			//LCD_WriteString(&string_buf);
-//
-//			//LCD_WriteAC(LCD_4_STR_ADDR);
-//			sprintf(&string_buf,"'='-Enter,'/'-Del");
-//			//LCD_WriteString(&string_buf);
-//
-//			//LCD_WriteAC(LCD_2_STR_ADDR+9+input_field_hi.char_count);
-//			//LCD_WriteCommand(LCD_CMD_CURSOR);
-//	}
-//}
-//
-//
-//void SettingsKey(unsigned char key)
-//{
-//		switch(key)
-//		{
-//			case 'F':
-//			{				
-//				//LCD_WriteCommand(LCD_CMD_CLEAR);
-//
-////				input_field_hi.char_count=2;
-//				input_field_lo.char_count=2;
-//
-////				sprintf(input_field_hi.input_char_buf,"%02u",channels[channel].calibrate.cal.cal_hi);
-//				sprintf(input_field_lo.input_char_buf,"%02bu",ADRESS_DEV);	
-//				
-//
-////				input_field_hi.input_char_buf[2]=0;
-//				input_field_lo.input_char_buf[2]=0;
-//
-//				input_field_ptr=&input_field_lo;
-//
-//			}
-//			break;
-//
-////			case '[':
-////			{
-////				input_field_ptr=&input_field_lo;
-////			}
-////			break;
-////
-////			case ']':
-////			{
-////				input_field_ptr=&input_field_hi;
-////			}
-////			break;
-//
-//			case '=':
-//			{
-//				if((input_field_ptr->input_char_buf[0]!=' ')/*&&(input_field_ptr->input_char_buf[0]!='-')*/)
-//				{
-//					if(input_field_ptr==&input_field_lo)
-//					{	
-//						sscanf(input_field_lo.input_char_buf,"%bu",&ADRESS_DEV);
-//						//SetFirstPoint(channel,channels[channel].channel_data,channels[channel].calibrate.cal.cal_lo);
-//						Device_Save_Address(ADRESS_DEV);
-//					}
-//				}
-//			}
-//			break;
-//
-//			case '/':
-//			{
-//				if(input_field_ptr->char_count)
-//				{
-//					input_field_ptr->input_char_buf[input_field_ptr->char_count-1]=' ';
-//					input_field_ptr->char_count--;
-//				}				
-//			}
-//			break;
-//		}
-//
-//		if(input_field_ptr->char_count<2)
-//		{
-//			if((key>='0') && (key<='9'))
-//			{
-//				   if(input_field_ptr->char_count==0)
-//				   {
-//				   		if((key=='0')||(key=='1'))
-//						{
-//						   input_field_ptr->input_char_buf[input_field_ptr->char_count]=key;
-//						   input_field_ptr->char_count++;							
-//						}
-//				   }
-//				   else
-//				   {
-//					   if(input_field_ptr->char_count==1)
-//					   {
-//					   		   if(input_field_ptr->input_char_buf[0]=='0')
-//							   {
-//								   		input_field_ptr->input_char_buf[input_field_ptr->char_count]=key;
-//								   		input_field_ptr->char_count++;							   		
-//							   }
-//							   else
-//							   {
-//								   if(((key>='0') && (key<='5')))
-//								   {
-//								   		input_field_ptr->input_char_buf[input_field_ptr->char_count]=key;
-//								   		input_field_ptr->char_count++;
-//								   }
-//							   }
-//					   }
-//				   }
-//			}
-//		}
-//		else
-//		{
-//			 input_field_ptr->char_count=2;
-//		}
-//		SettingsScreen();		
-//}
-//
-//void SettingsScreen(void)
-//{
-// 	if(input_field_ptr==&input_field_lo)
-//	{
-//			//LCD_WriteAC(LCD_1_STR_ADDR);
-//			sprintf(&string_buf,"Address [%2s]",input_field_lo.input_char_buf);
-//			//LCD_WriteString(&string_buf);
-//
-//			//LCD_WriteAC(LCD_4_STR_ADDR);
-//			sprintf(&string_buf,"'='-Enter,'/'-Del");
-//			//LCD_WriteString(&string_buf);
-//
-//			//LCD_WriteAC(LCD_1_STR_ADDR+9+input_field_lo.char_count);
-//			//LCD_WriteCommand(LCD_CMD_CURSOR);
-//	}	
-//}
+void CalibrationKey(unsigned char key,unsigned char channel,unsigned char type)
+{
+		switch(key)
+		{
+			case 'E'://enter
+			{
+				//сохранить параметр в eeprom
+			}
+			break;
 
+//			case 'Q'//quit
+//			{
+//			}
+//			break;
+
+			case '>'://shift
+			{
+
+			}
+			break;
+
+			case '+'://increment
+			{
+			}
+			break;
+		}
+		CalibrationScreen(channel);		
+}
+
+void CalibrationScreen(unsigned char channel)//экран калибровки канала
+{
+		unsigned char i;
+		xdata menuItem code * tempMenu;
+
+		dynamic_disp=DYN_NOT_DISPLAY;
+	    for(i=0;i<CHANNEL_NUMBER;i++)
+	    {
+			//sprintf(channels[i].string_buf,"   ");
+			memset(channels[i].string_buf,' ',3);
+			channels[i].string_buf[3]=0;
+		}
+		tempMenu= selectedMenuItem->Parent;
+		memcpy(channels[0].string_buf,tempMenu->Text,4);
+		memcpy(channels[1].string_buf,selectedMenuItem->Text,4);
+	//	sprintf(channels[0].string_buf," % 3bu",brightness);
+}
+//--------------------------------------------------------
 PT_THREAD(DisplayProcess(struct pt *pt))
 {
 
