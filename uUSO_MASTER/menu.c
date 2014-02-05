@@ -19,7 +19,10 @@ extern volatile unsigned char xdata ADRESS_DEV;
 
 volatile struct pt pt_display;
 
-//sbit LED=P0^6;
+sbit LED1=P0^0;
+sbit LED2=P0^1;
+sbit LED3=P0^2;
+sbit LED4=P0^3;
 
 
 enum
@@ -71,15 +74,15 @@ MAKE_MENU(m_s0i1,  NULL_ENTRY,NULL_ENTRY,  NULL_ENTRY, m_s1i1,       0, 	"DATA S
 
 
 MAKE_MENU(m_s1i1,  m_s1i2,    NULL_ENTRY,  m_s0i1,     m_s2i1,       0, 					"5Et");
-MAKE_MENU(m_s1i2,  NULL_ENTRY,m_s1i1,      m_s0i1,     m_s3i1,       MENU_SET_BRIGHTNESS,   "brI");
+MAKE_MENU(m_s1i2,  NULL_ENTRY,m_s1i1,      m_s0i1,     NULL_ENTRY,   MENU_SET_BRIGHTNESS,   "brI");
 
 // подменю Настройка каналов
-MAKE_MENU(m_s2i1,  m_s2i2,    NULL_ENTRY,  m_s1i1,     m_s3i1,       MENU_CHN1_SET, 		"Ch1");
-MAKE_MENU(m_s2i2,  m_s2i3,    m_s2i1,      m_s1i1,     m_s4i1,   	 MENU_CHN2_SET, 		"Ch2");
-MAKE_MENU(m_s2i3,  m_s2i4,	  m_s2i2,      m_s1i1,     m_s5i1,   	 MENU_CHN3_SET, 		"Ch3");
-MAKE_MENU(m_s2i4,  m_s2i5,	  m_s2i3,      m_s1i1,     m_s6i1,   	 MENU_CHN4_SET, 		"Ch4");
-MAKE_MENU(m_s2i5,  m_s2i6,	  m_s2i4,      m_s1i1,     m_s7i1,   	 MENU_CHN5_SET, 		"Ch5");
-MAKE_MENU(m_s2i6,  NULL_ENTRY,m_s2i5,      m_s1i1,     m_s8i1,   	 MENU_CHN6_SET, 		"Ch6");
+MAKE_MENU(m_s2i1,  m_s2i2,    NULL_ENTRY,  m_s1i1,     m_s3i1,       /*MENU_CHN1_SET*/0, 		"C_1");
+MAKE_MENU(m_s2i2,  m_s2i3,    m_s2i1,      m_s1i1,     m_s4i1,   	 /*MENU_CHN2_SET*/0, 		"C_2");
+MAKE_MENU(m_s2i3,  m_s2i4,	  m_s2i2,      m_s1i1,     m_s5i1,   	 /*MENU_CHN3_SET*/0, 		"C_3");
+MAKE_MENU(m_s2i4,  m_s2i5,	  m_s2i3,      m_s1i1,     m_s6i1,   	 /*MENU_CHN4_SET*/0, 		"C_4");
+MAKE_MENU(m_s2i5,  m_s2i6,	  m_s2i4,      m_s1i1,     m_s7i1,   	 /*MENU_CHN5_SET*/0, 		"C_5");
+MAKE_MENU(m_s2i6,  NULL_ENTRY,m_s2i5,      m_s1i1,     m_s8i1,   	 /*MENU_CHN6_SET*/0, 		"C_6");
 
 
 // Настройка канала	 1
@@ -115,9 +118,9 @@ MAKE_MENU(m_s8i4,  NULL_ENTRY,m_s8i3,      m_s2i6,     NULL_ENTRY,   MENU_CHN6_U
 
 
 
-unsigned char string_buf[32];
+//unsigned char string_buf[32];
 //unsigned char input_char_count;
-#define INPUT_CHAR_BUF_LEN	6
+//#define INPUT_CHAR_BUF_LEN	6
 //
 //unsigned char *input_char_buf;
 //unsigned char input_char_buf_lo[INPUT_CHAR_BUF_LEN+1];
@@ -149,13 +152,27 @@ void CalibrationScreen(unsigned char channel);//экран калибровки канала
 void SettingsKey(unsigned char key);
 void SettingsScreen(void);
 
-
 void menuChange(menuItem code* NewMenu)
 {
 	if (NewMenu == &NULL_ENTRY)
 	  return;
 
 	selectedMenuItem = NewMenu;
+}
+
+void menuChange_NEXT(void)
+{
+	xdata menuItem code * tempMenu;
+
+	if(selectedMenuItem->Next==&NULL_ENTRY)
+	{
+		tempMenu = selectedMenuItem->Parent;
+		menuChange(tempMenu->Child);	
+	}
+	else
+	{
+		menuChange(selectedMenuItem->Next);	
+	}	
 }
 
 unsigned char dispMenu(void)
@@ -169,15 +186,11 @@ unsigned char dispMenu(void)
 	else 
 	{
 		dynamic_disp=DYN_NOT_DISPLAY;
-
-
 	    for(i=0;i<CHANNEL_NUMBER;i++)
 	    {
 			sprintf(channels[i].string_buf,"   ");
 		}
-	//	sprintf(channels[0].string_buf,(const unsigned char *)selectedMenuItem->Text);
-		memcpy(channels[0].string_buf,(const unsigned char *)selectedMenuItem->Text,3);
-		Tablo_Output_Frame();
+		memcpy(channels[0].string_buf,selectedMenuItem->Text,4);
 	}
 	return (1);
 }
@@ -185,7 +198,6 @@ unsigned char dispMenu(void)
 unsigned char menuKey(unsigned char key) 
 {
 	menuItem* sel;
-
 
 	if(!flag_menu_entry)
 	{
@@ -199,21 +211,22 @@ unsigned char menuKey(unsigned char key)
 		
 			case '+': 
 			{
-				menuChange(PREVIOUS);
-	
+				menuChange(PREVIOUS);	
 			}
 			break;
 		
 			case '>': 
 			{
-				menuChange(NEXT);			
+			//	menuChange(NEXT);
+			menuChange_NEXT();		
 			}
 			break;
 		
 		
 			case 'E':
-			{ // выбор пункта					
-					sel = selectedMenuItem->Select;//SELECT;
+			{ // выбор пункта	
+			LED1=~LED1;				
+//					sel = selectedMenuItem->Select;//SELECT;
 					if (selectedMenuItem->Select != 0) 
 					{
 						menuHandler(selectedMenuItem,key);	
@@ -237,20 +250,13 @@ unsigned char menuKey(unsigned char key)
 	
 			}		
 		} 
-	
-		if(key!=0)
-	   	{
-			dispMenu(); 
-		}
+	    dispMenu(); 
 	}
 	else
 	{
 		if(key== 'Q') 
 		{ // отмена выбора (возврат)
-	
 			flag_menu_entry=0;
-//			dynamic_disp=DYN_NOT_DISPLAY;
-
 			dispMenu(); 
 		}
 		else
@@ -665,28 +671,31 @@ PT_THREAD(DisplayProcess(struct pt *pt))
 
   while(1) 
   {
-	wdt_count[Display_Proc].process_state=IDLE;  
- 	PT_YIELD_UNTIL(pt,dynamic_disp); //ждем команды на старт	
-	 
-  	wdt_count[Display_Proc].process_state=RUN;
-  	PT_DELAY(pt,20);
+//	wdt_count[Display_Proc].process_state=IDLE;  
 
-   for(i=0;i<CHANNEL_NUMBER;i++)
+  	PT_DELAY(pt,50);
+ //	PT_YIELD_UNTIL(pt,dynamic_disp); //ждем команды на старт	
+	 
+   wdt_count[Display_Proc].process_state=RUN;
+   if(dynamic_disp)
    {
-		//value=GetCalibrateVal(i,channels[i].channel_data);
-		  value= (float)channels[i].channel_data/0xFFFFFF*10.225;
-	 
-		  if(_chkfloat_ (value)>1) 
-		  {
-			   sprintf(channels[i].string_buf,"Err");
-		  }
-		  else  
-		  {
-			   sprintf(channels[i].string_buf,"%3.2f",value);
-		  }
+	   for(i=0;i<CHANNEL_NUMBER;i++)
+	   {
+			//value=GetCalibrateVal(i,channels[i].channel_data);
+			  value= (float)channels[i].channel_data/0xFFFFFF*10.225;
+		 
+			  if(_chkfloat_ (value)>1) 
+			  {
+				   sprintf(channels[i].string_buf,"Err");
+			  }
+			  else  
+			  {
+				   sprintf(channels[i].string_buf,"%3.2f",value);
+			  }
+		}
 	}
-
 	Tablo_Output_Frame();
+	
 
 	wdt_count[Display_Proc].count++;
   }

@@ -35,9 +35,9 @@ PT_THREAD(KeyboardProcess(struct pt *pt))
   wdt_count[Key_Proc].process_state=RUN;
   while(1) 
   {  	
-		PT_DELAY(pt,50);
+		PT_DELAY(pt,5);
 		key_1= Key_Ask();
-		PT_DELAY(pt,50);
+		PT_DELAY(pt,5);
 		key_2= Key_Ask();			
 
 		if((key_1==key_2)&&(key_1!=last_key)/*&&(key_1!=0x0)*/)
