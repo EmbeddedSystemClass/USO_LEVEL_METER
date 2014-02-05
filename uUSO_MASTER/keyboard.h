@@ -49,7 +49,7 @@
 sbit KEY_1=P3^2;
 sbit KEY_2=P3^3;
 sbit KEY_3=P3^4;
-sbit KEY_4=P3^5;
+sbit KEY_4=P3^6;
 
 void KB_Initialize();
 unsigned char KB_ReadKey();

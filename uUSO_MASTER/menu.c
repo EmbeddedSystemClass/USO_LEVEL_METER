@@ -119,20 +119,6 @@ MAKE_MENU(m_s8i4,  NULL_ENTRY,m_s8i3,      m_s2i6,     NULL_ENTRY,   MENU_CHN6_U
 
 
 
-//unsigned char string_buf[32];
-//unsigned char input_char_count;
-//#define INPUT_CHAR_BUF_LEN	6
-//
-//unsigned char *input_char_buf;
-//unsigned char input_char_buf_lo[INPUT_CHAR_BUF_LEN+1];
-//unsigned char input_char_buf_hi[INPUT_CHAR_BUF_LEN+1];
-
-enum
-{
-	CAL_FLOAT_LO=0,
-	CAL_FLOAT_HI
-};
-
 enum
 {
 	CAL_HI=0,
@@ -141,26 +127,13 @@ enum
 	UST_LO
 };
 
-//struct input_field
-//{
-//	unsigned char input_char_buf[2*INPUT_CHAR_BUF_LEN+1];
-//	unsigned char char_count;
-//	unsigned char has_point;
-//};
-//
-//volatile struct input_field input_field_lo={"      ",0,0};
-//volatile struct input_field input_field_hi={"      ",0,0};
-//
-//volatile struct input_field *input_field_ptr;
+static unsigned char enter_flag=0; //зашли в поле ввода
 
 
 unsigned char menuHandler(menuItem* currentMenuItem,unsigned char key);	 //обработка меню
 
 void CalibrationKey(unsigned char key,unsigned char channel,unsigned char type);
 void CalibrationScreen(unsigned char channel);//экран калибровки канала
-
-//void SettingsKey(unsigned char key);
-//void SettingsScreen(void);
 
 void SetBrightnessKey(unsigned char key);
 void SetBrightnessScreen(void);
@@ -205,6 +178,7 @@ unsigned char dispMenu(void)
 		}
 		memcpy(channels[0].string_buf,selectedMenuItem->Text,4);
 	}
+	enter_flag=0;
 	return (1);
 }
 
@@ -224,7 +198,7 @@ unsigned char menuKey(unsigned char key)
 		
 			case '+': 
 			{
-				menuChange(PREVIOUS);	
+//				menuChange(PREVIOUS);	
 			}
 			break;
 		
@@ -467,7 +441,18 @@ void SetBrightnessKey(unsigned char key)
 		{
 			case 'E'://enter
 			{
-				//сохранить параметр в eeprom
+				if(!enter_flag)
+				{
+				   //отобразить параметр
+				   enter_flag=1;
+				}
+				else
+				{
+					//сохранить параметр в eeprom
+					enter_flag=0;
+				    flag_menu_entry=0;
+					dispMenu(); 
+				}
 			}
 			break;
 
@@ -478,16 +463,21 @@ void SetBrightnessKey(unsigned char key)
 
 			case '>'://shift
 			{
-				brightness=(brightness+1)&0xF;
+				
 			}
 			break;
 
 			case '+'://increment
 			{
+				brightness=(brightness+1)&0xF;
 			}
 			break;
 		}
-		SetBrightnessScreen();
+		
+		if(enter_flag)
+		{
+			SetBrightnessScreen();
+		}
 }
 
 void SetBrightnessScreen(void)
@@ -496,13 +486,15 @@ void SetBrightnessScreen(void)
 		dynamic_disp=DYN_NOT_DISPLAY;
 	    for(i=0;i<CHANNEL_NUMBER;i++)
 	    {
-			//sprintf(channels[i].string_buf,"   ");
 			memset(channels[i].string_buf,' ',3);
 			channels[i].string_buf[3]=0;
 		}
-		//memcpy(channels[0].string_buf,selectedMenuItem->Text,4);
 		sprintf(channels[0].string_buf," % 3bu",brightness);
 }
+
+
+static unsigned char  current_char=0;
+
 //-------------------------------------------------------
 void CalibrationKey(unsigned char key,unsigned char channel,unsigned char type)
 {
@@ -510,7 +502,19 @@ void CalibrationKey(unsigned char key,unsigned char channel,unsigned char type)
 		{
 			case 'E'://enter
 			{
-				//сохранить параметр в eeprom
+				if(!enter_flag)
+				{
+				   current_char=0;
+				   sprintf(channels[2].string_buf,"0.00");
+				   enter_flag=1;
+			    }
+				else
+				{
+					enter_flag=0;
+				    flag_menu_entry=0;
+					dispMenu(); 
+					//сохранить параметр в eeprom
+				}
 			}
 			break;
 
@@ -521,16 +525,35 @@ void CalibrationKey(unsigned char key,unsigned char channel,unsigned char type)
 
 			case '>'://shift
 			{
+			 	current_char++;
+				if(current_char==1)
+				{
+					current_char=2;
+				}
 
+				if(current_char>3)
+				{
+					current_char=0;
+				}
 			}
 			break;
 
 			case '+'://increment
-			{
+			{	
+				channels[2].string_buf[current_char]++;
+				if((channels[2].string_buf[current_char]<'0')||(channels[2].string_buf[current_char]>'9'))
+				{
+					channels[2].string_buf[current_char]='0';
+				}
+				channels[2].string_buf[1]='.';				
 			}
 			break;
 		}
-		CalibrationScreen(channel);		
+
+		if(enter_flag)
+		{
+			CalibrationScreen(channel);
+		}		
 }
 
 void CalibrationScreen(unsigned char channel)//экран калибровки канала
@@ -539,7 +562,7 @@ void CalibrationScreen(unsigned char channel)//экран калибровки канала
 		xdata menuItem code * tempMenu;
 
 		dynamic_disp=DYN_NOT_DISPLAY;
-	    for(i=0;i<CHANNEL_NUMBER;i++)
+	    for(i=3;i<CHANNEL_NUMBER;i++)
 	    {
 			//sprintf(channels[i].string_buf,"   ");
 			memset(channels[i].string_buf,' ',3);

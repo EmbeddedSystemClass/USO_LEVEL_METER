@@ -84,8 +84,8 @@ PT_THREAD(KeyboardProcess(struct pt *pt))
 
 	if(!KEY_4)
 	{
-//		return '+';
-return 0;
+		return '+';
+//return 0;
 	}
 
 	 return 0;
