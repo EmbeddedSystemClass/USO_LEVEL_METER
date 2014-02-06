@@ -90,16 +90,21 @@ void Protocol_Init(void) //using 0
 //	PT_INIT(&pt_proto);
 	return;
 }
-//-----------------------------------------------------------------------------
-
 //-----------------------------------------------------------------------------------
 const unsigned char tablo_channels[CHANNEL_NUMBER]={0,1,2,3,4,5};//таблица номеров каналов индикаторов табло, вставить правильные
 unsigned char Tablo_Output_Frame(void)
 {
-   unsigned char i=0;
+   unsigned char i=0,j=0;
    unsigned char counter=0;//счетчик символов кадра
-  // unsigned char chr_buffer[8];
-  // float value;
+	static unsigned char blink_flag,blink_counter;
+	unsigned char *frame_buffer;
+
+	if(blink_counter>=2)
+	{
+		blink_flag=(blink_flag^1)&0x1;
+		blink_counter=0;
+	}
+	blink_counter++;
   
    TransferBuf[0]=0x00;TransferBuf[1]=0xD7;TransferBuf[2]=0x29;
    TransferBuf[3]=ADRESS_DEV;  // адрес узла
@@ -115,40 +120,43 @@ unsigned char Tablo_Output_Frame(void)
   // TransferBuf[10]=counter-15;//длина кадра табло
    counter=11;
    for(i=0;i<CHANNEL_NUMBER;i++)
-   {
-   		TransferBuf[counter]='[';
+   {	
+		TransferBuf[counter]='[';
 		counter++;
 		TransferBuf[counter]=tablo_channels[i];
 		counter++;
-		//value=GetCalibrateVal(i,channels[i].channel_data);
-//		value= (float)channels[i].channel_data/0xFFFFFF*10.225;
-	 
-//	  if(_chkfloat_ (value)>1) 
-//	  {
-//		   counter+=sprintf(&TransferBuf[counter],"Err");
-//	  }
-//	  else  
-//	  {
-//		   counter+=sprintf(&TransferBuf[counter],"%3.2f",value);
-//	  }
 
-		counter+=sprintf(&TransferBuf[counter],"%s",channels[i].string_buf);	
+		frame_buffer=&TransferBuf[counter];
+		counter+=sprintf(&TransferBuf[counter],"%s",channels[i].string_buf);
+		
+		
+		
+		if(blink_flag)
+		{
+			for(j=0;j<4;j++)
+			{
+				if(channels[i].string_mask[j]==' ')
+				{
+					frame_buffer[j]=' ';	
+				}
+			}
+		}	
 
 		TransferBuf[counter]=']';
 		counter++;		
    }
 
-   		TransferBuf[counter]='[';
-		counter++;
+	TransferBuf[counter]='[';
+	counter++;
 
-		TransferBuf[counter]='*';
-		counter++;
+	TransferBuf[counter]='*';
+	counter++;
 
-   		TransferBuf[counter]=brightness&0xF;//0xF;
-		counter++;
-		
-		TransferBuf[counter]=']';
-		counter++;	
+	TransferBuf[counter]=brightness&0xF;//0xF;
+	counter++;
+	
+	TransferBuf[counter]=']';
+	counter++;	
 
    TransferBuf[counter]=0x1;//номер канала
    counter++;

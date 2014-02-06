@@ -15,15 +15,11 @@
 #define DISPLAY_HEIGHT	4
 
 extern struct Channel xdata channels[CHANNEL_NUMBER];//обобщенная структура каналов
-//extern volatile unsigned char xdata ADRESS_DEV;
 extern unsigned char brightness	;
 
 volatile struct pt pt_display;
 
-//sbit LED1=P0^0;
-//sbit LED2=P0^1;
-//sbit LED3=P0^2;
-//sbit LED4=P0^3;
+
 
 
 enum
@@ -49,8 +45,11 @@ xdata menuItem code* selectedMenuItem; // текущий пункт меню
 menuItem code* menuStack[10];
 volatile unsigned char menuStackTop;
 
-char buf[20];
+//char buf[20];
 unsigned char dynamic_disp=0;//номер отображаемого динамического экрана
+
+unsigned char  current_char=0;
+unsigned char num_buf[8];
 
 #define MAKE_MENU(Name, Next, Previous, Parent, Child, Select, Text) \
     extern menuItem Next;     \
@@ -127,6 +126,12 @@ enum
 	UST_LO
 };
 
+enum
+{
+	BLINK_ALL=0xF,
+	BLINK_NONE=0xFF
+};
+
 static unsigned char enter_flag=0; //зашли в поле ввода
 
 
@@ -137,6 +142,8 @@ void CalibrationScreen(unsigned char channel);//экран калибровки канала
 
 void SetBrightnessKey(unsigned char key);
 void SetBrightnessScreen(void);
+
+void Set_Blink_Sym(struct Channel *chn,unsigned char sym_position);
 
 void menuChange(menuItem code* NewMenu)
 {
@@ -161,6 +168,8 @@ void menuChange_NEXT(void)
 	}	
 }
 
+
+
 unsigned char dispMenu(void)
 {
 	unsigned char i=0;
@@ -168,10 +177,20 @@ unsigned char dispMenu(void)
 	if (selectedMenuItem == &m_s0i1) 
 	{ // мы на верхнем уровне
 		dynamic_disp= DYN_DISPALY_ON;
+		Set_Blink_Sym(&channels[0],0);
+		Set_Blink_Sym(&channels[4],3);
 	} 
 	else 
 	{
 		dynamic_disp=DYN_NOT_DISPLAY;
+
+		Set_Blink_Sym(&channels[0],BLINK_NONE);
+		Set_Blink_Sym(&channels[1],BLINK_NONE);
+		Set_Blink_Sym(&channels[2],BLINK_NONE);
+		Set_Blink_Sym(&channels[3],BLINK_NONE);
+		Set_Blink_Sym(&channels[4],BLINK_NONE);
+		Set_Blink_Sym(&channels[5],BLINK_NONE);
+
 	    for(i=0;i<CHANNEL_NUMBER;i++)
 	    {
 			sprintf(channels[i].string_buf,"   ");
@@ -432,6 +451,12 @@ unsigned char startMenu(void)
 
 	dispMenu();
 	PT_INIT(&pt_display);
+		Set_Blink_Sym(&channels[0],BLINK_NONE);
+		Set_Blink_Sym(&channels[1],BLINK_NONE);
+		Set_Blink_Sym(&channels[2],BLINK_NONE);
+		Set_Blink_Sym(&channels[3],BLINK_NONE);
+		Set_Blink_Sym(&channels[4],BLINK_NONE);
+		Set_Blink_Sym(&channels[5],BLINK_NONE);
 	return 0;
 }
 //-------------------------------------------------------
@@ -493,11 +518,10 @@ void SetBrightnessScreen(void)
 }
 
 
-static unsigned char  current_char=0;
 
 //-------------------------------------------------------
 void CalibrationKey(unsigned char key,unsigned char channel,unsigned char type)
-{
+{		
 		switch(key)
 		{
 			case 'E'://enter
@@ -506,7 +530,10 @@ void CalibrationKey(unsigned char key,unsigned char channel,unsigned char type)
 				{
 				   current_char=0;
 				   sprintf(channels[2].string_buf,"0.00");
+				   strncpy(num_buf,channels[2].string_buf,4);
+
 				   enter_flag=1;
+				   Set_Blink_Sym(&channels[2],current_char);
 			    }
 				else
 				{
@@ -535,17 +562,27 @@ void CalibrationKey(unsigned char key,unsigned char channel,unsigned char type)
 				{
 					current_char=0;
 				}
+
+				Set_Blink_Sym(&channels[2],current_char);
 			}
 			break;
 
 			case '+'://increment
 			{	
-				channels[2].string_buf[current_char]++;
-				if((channels[2].string_buf[current_char]<'0')||(channels[2].string_buf[current_char]>'9'))
+//				channels[2].string_buf[current_char]++;
+//				if((channels[2].string_buf[current_char]<'0')||(channels[2].string_buf[current_char]>'9'))
+//				{
+//					channels[2].string_buf[current_char]='0';
+//				}
+//				channels[2].string_buf[1]='.';	
+				num_buf[current_char]++;
+				if((num_buf[current_char]<'0')||(num_buf[current_char]>'9'))
 				{
-					channels[2].string_buf[current_char]='0';
+					num_buf[current_char]='0';
 				}
-				channels[2].string_buf[1]='.';				
+				num_buf[4]=0;
+				num_buf[1]='.';				
+				strncpy(channels[2].string_buf,num_buf,4);			
 			}
 			break;
 		}
@@ -573,12 +610,36 @@ void CalibrationScreen(unsigned char channel)//экран калибровки канала
 		memcpy(channels[1].string_buf,selectedMenuItem->Text,4);
 	//	sprintf(channels[0].string_buf," % 3bu",brightness);
 }
+
+
+void Set_Blink_Sym(struct Channel *chn,unsigned char sym_position)
+{
+		if(sym_position<4)
+		{
+				sprintf(chn->string_mask,"XXXX");
+				chn->string_mask[sym_position]=' ';
+//				chn->blink=BLINK_ON;
+		}
+		else
+		{
+			if(sym_position==0xF)
+			{
+				sprintf(chn->string_mask,"    ");
+//				chn->blink=BLINK_ON;
+			}
+			else
+			{
+				sprintf(chn->string_mask,"XXXX");
+//				chn->blink=BLINK_OFF;
+			}
+		}	
+}
 //--------------------------------------------------------
 PT_THREAD(DisplayProcess(struct pt *pt))
 {
 
-  unsigned char i=0;
-  float value;
+  static unsigned char i=0;
+  static float value;
   PT_BEGIN(pt);
 
   while(1) 
@@ -589,7 +650,7 @@ PT_THREAD(DisplayProcess(struct pt *pt))
  //	PT_YIELD_UNTIL(pt,dynamic_disp); //ждем команды на старт	
 	 
    wdt_count[Display_Proc].process_state=RUN;
-   if(dynamic_disp)
+   if(/*dynamic_disp*/selectedMenuItem == &m_s0i1)
    {
 	   for(i=0;i<CHANNEL_NUMBER;i++)
 	   {
@@ -605,10 +666,15 @@ PT_THREAD(DisplayProcess(struct pt *pt))
 				   sprintf(channels[i].string_buf,"%3.2f",value);
 			  }
 		}
-	}
-	Tablo_Output_Frame();
-	
 
+	}
+		
+//	if(selectedMenuItem->Select==MENU_CHN1_CAL_HI)	 //calibr 1 channel
+//	{
+//		Set_Blink_Sym(&channels[2],current_char);	
+//	}
+
+	Tablo_Output_Frame();
 	wdt_count[Display_Proc].count++;
   }
 
