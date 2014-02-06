@@ -61,10 +61,13 @@ struct Channel
 			unsigned long  adc_hi;
 			float 		   cal_hi;
 
+			float		   ust_hi;
+			float		   ust_lo;
+
 //			unsigned char calibrate;//флаг калиброванности	
-			unsigned char signal;//сигнал по превышению уставки	
+//			unsigned char signal;//сигнал по превышению уставки	
 		} cal;
-		unsigned long serialize[5];//
+		unsigned long serialize[6];//
 	} calibrate;
 	
 } ;

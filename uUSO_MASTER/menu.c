@@ -48,8 +48,8 @@ volatile unsigned char menuStackTop;
 //char buf[20];
 unsigned char dynamic_disp=0;//номер отображаемого динамического экрана
 
-unsigned char  current_char=0;
-unsigned char num_buf[8];
+
+unsigned //char num_buf[8];
 
 #define MAKE_MENU(Name, Next, Previous, Parent, Child, Select, Text) \
     extern menuItem Next;     \
@@ -518,29 +518,98 @@ void SetBrightnessScreen(void)
 }
 
 
-
+#define CAL_ENTER_FIELD	2
 //-------------------------------------------------------
 void CalibrationKey(unsigned char key,unsigned char channel,unsigned char type)
-{		
+{
+		float value;
+		static unsigned char  current_char=0;		
 		switch(key)
 		{
 			case 'E'://enter
 			{
 				if(!enter_flag)
 				{
-				   current_char=0;
-				   sprintf(channels[2].string_buf,"0.00");
-				   strncpy(num_buf,channels[2].string_buf,4);
+					current_char=0;
+		
+					switch(type)
+					{
+						case CAL_HI:
+						{
+							value=channels[channel].calibrate.cal.cal_hi;	
+						}
+						break;
+	
+						case CAL_LO:
+						{
+							value=channels[channel].calibrate.cal.cal_lo;
+						}
+						break;
+	
+						case UST_HI:
+						{
+							value=channels[channel].calibrate.cal.ust_hi;
+						}
+						break;
+	
+						case UST_LO:
+						{
+							value=channels[channel].calibrate.cal.ust_lo;
+						}
+						break;
+					}
+					
+				  if((_chkfloat_ (value)==0)&&(value>0.00)&&(value<9.99)) 
+				  {
+					   
+					   sprintf(channels[CAL_ENTER_FIELD].string_buf,"%3.2f",value);
+				  }
+				  else  
+				  {
+					  sprintf(channels[CAL_ENTER_FIELD].string_buf,"0.00");
+				  }	
 
-				   enter_flag=1;
-				   Set_Blink_Sym(&channels[2],current_char);
+				  enter_flag=1;
+				  Set_Blink_Sym(&channels[CAL_ENTER_FIELD],current_char);
 			    }
 				else
 				{
+					  sscanf(channels[CAL_ENTER_FIELD].string_buf,"%f",&value);
+				   	  if((_chkfloat_ (value)==0)&&(value>0.00)&&(value<9.99)) 
+					  {
+							switch(type)
+							{
+								case CAL_HI:
+								{
+									channels[channel].calibrate.cal.cal_hi=value;
+									//сохранить параметр в eeprom	
+								}
+								break;
+			
+								case CAL_LO:
+								{
+									channels[channel].calibrate.cal.cal_lo=value;
+								}
+								break;
+			
+								case UST_HI:
+								{
+									channels[channel].calibrate.cal.ust_hi=value;
+								}
+								break;
+			
+								case UST_LO:
+								{
+									channels[channel].calibrate.cal.ust_lo=value;
+								}
+								break;
+							}
+					 }
+					
 					enter_flag=0;
 				    flag_menu_entry=0;
 					dispMenu(); 
-					//сохранить параметр в eeprom
+					
 				}
 			}
 			break;
@@ -563,26 +632,18 @@ void CalibrationKey(unsigned char key,unsigned char channel,unsigned char type)
 					current_char=0;
 				}
 
-				Set_Blink_Sym(&channels[2],current_char);
+				Set_Blink_Sym(&channels[CAL_ENTER_FIELD],current_char);
 			}
 			break;
 
 			case '+'://increment
 			{	
-//				channels[2].string_buf[current_char]++;
-//				if((channels[2].string_buf[current_char]<'0')||(channels[2].string_buf[current_char]>'9'))
-//				{
-//					channels[2].string_buf[current_char]='0';
-//				}
-//				channels[2].string_buf[1]='.';	
-				num_buf[current_char]++;
-				if((num_buf[current_char]<'0')||(num_buf[current_char]>'9'))
+				channels[CAL_ENTER_FIELD].string_buf[current_char]++;
+				if((channels[CAL_ENTER_FIELD].string_buf[current_char]<'0')||(channels[CAL_ENTER_FIELD].string_buf[current_char]>'9'))
 				{
-					num_buf[current_char]='0';
+					channels[CAL_ENTER_FIELD].string_buf[current_char]='0';
 				}
-				num_buf[4]=0;
-				num_buf[1]='.';				
-				strncpy(channels[2].string_buf,num_buf,4);			
+				channels[CAL_ENTER_FIELD].string_buf[1]='.';	
 			}
 			break;
 		}
@@ -601,9 +662,9 @@ void CalibrationScreen(unsigned char channel)//экран калибровки канала
 		dynamic_disp=DYN_NOT_DISPLAY;
 	    for(i=3;i<CHANNEL_NUMBER;i++)
 	    {
-			//sprintf(channels[i].string_buf,"   ");
-			memset(channels[i].string_buf,' ',3);
-			channels[i].string_buf[3]=0;
+			sprintf(channels[i].string_buf,"   ");
+//			memset(channels[i].string_buf,' ',3);
+//			channels[i].string_buf[3]=0;
 		}
 		tempMenu= selectedMenuItem->Parent;
 		memcpy(channels[0].string_buf,tempMenu->Text,4);
@@ -618,19 +679,16 @@ void Set_Blink_Sym(struct Channel *chn,unsigned char sym_position)
 		{
 				sprintf(chn->string_mask,"XXXX");
 				chn->string_mask[sym_position]=' ';
-//				chn->blink=BLINK_ON;
 		}
 		else
 		{
 			if(sym_position==0xF)
 			{
 				sprintf(chn->string_mask,"    ");
-//				chn->blink=BLINK_ON;
 			}
 			else
 			{
 				sprintf(chn->string_mask,"XXXX");
-//				chn->blink=BLINK_OFF;
 			}
 		}	
 }
@@ -668,11 +726,6 @@ PT_THREAD(DisplayProcess(struct pt *pt))
 		}
 
 	}
-		
-//	if(selectedMenuItem->Select==MENU_CHN1_CAL_HI)	 //calibr 1 channel
-//	{
-//		Set_Blink_Sym(&channels[2],current_char);	
-//	}
 
 	Tablo_Output_Frame();
 	wdt_count[Display_Proc].count++;
