@@ -284,7 +284,7 @@
             <uAregs>1</uAregs>
             <UseInterruptVector>1</UseInterruptVector>
             <Fuzzy>3</Fuzzy>
-            <Optimize>0</Optimize>
+            <Optimize>6</Optimize>
             <WarningLevel>2</WarningLevel>
             <SizeSpeed>1</SizeSpeed>
             <ObjectExtend>1</ObjectExtend>
@@ -429,11 +429,6 @@
               <FilePath>.\watchdog.c</FilePath>
             </File>
             <File>
-              <FileName>proto_uso.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\proto_uso\proto_uso.c</FilePath>
-            </File>
-            <File>
               <FileName>channels.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\proto_uso\channels.c</FilePath>
@@ -444,11 +439,6 @@
               <FilePath>.\START_AD.A51</FilePath>
             </File>
             <File>
-              <FileName>frequency.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\frequency.c</FilePath>
-            </File>
-            <File>
               <FileName>timer0.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\timer0.c</FilePath>
@@ -457,11 +447,6 @@
               <FileName>timer2.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\timer2.c</FilePath>
-            </File>
-            <File>
-              <FileName>i2c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\i2c.c</FilePath>
             </File>
             <File>
               <FileName>calibrate.c</FileName>
@@ -502,6 +487,21 @@
               <FileName>crc_table.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\crc_table.c</FilePath>
+            </File>
+            <File>
+              <FileName>menu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\menu.c</FilePath>
+            </File>
+            <File>
+              <FileName>keyboard.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\keyboard.c</FilePath>
+            </File>
+            <File>
+              <FileName>proto_tablo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\proto_tablo.c</FilePath>
             </File>
           </Files>
         </Group>

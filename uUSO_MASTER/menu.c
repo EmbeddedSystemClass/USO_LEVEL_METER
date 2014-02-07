@@ -118,13 +118,7 @@ MAKE_MENU(m_s8i4,  NULL_ENTRY,m_s8i3,      m_s2i6,     NULL_ENTRY,   MENU_CHN6_U
 
 
 
-enum
-{
-	CAL_HI=0,
-	CAL_LO,
-	UST_HI,
-	UST_LO
-};
+
 
 enum
 {
@@ -177,8 +171,8 @@ unsigned char dispMenu(void)
 	if (selectedMenuItem == &m_s0i1) 
 	{ // мы на верхнем уровне
 		dynamic_disp= DYN_DISPALY_ON;
-		Set_Blink_Sym(&channels[0],0);
-		Set_Blink_Sym(&channels[4],3);
+//		Set_Blink_Sym(&channels[0],0);
+//		Set_Blink_Sym(&channels[4],3);
 	} 
 	else 
 	{
@@ -581,7 +575,7 @@ void CalibrationKey(unsigned char key,unsigned char channel,unsigned char type)
 							{
 								case CAL_HI:
 								{
-									channels[channel].calibrate.cal.cal_hi=value;
+									channels[channel].calibrate.cal.cal_hi=value;									
 									//сохранить параметр в eeprom	
 								}
 								break;
@@ -604,12 +598,12 @@ void CalibrationKey(unsigned char key,unsigned char channel,unsigned char type)
 								}
 								break;
 							}
+							SetCalibration(channel,type);
 					 }
 					
 					enter_flag=0;
 				    flag_menu_entry=0;
-					dispMenu(); 
-					
+					dispMenu(); 					
 				}
 			}
 			break;
@@ -705,15 +699,14 @@ PT_THREAD(DisplayProcess(struct pt *pt))
 //	wdt_count[Display_Proc].process_state=IDLE;  
 
   	PT_DELAY(pt,50);
- //	PT_YIELD_UNTIL(pt,dynamic_disp); //ждем команды на старт	
 	 
    wdt_count[Display_Proc].process_state=RUN;
-   if(/*dynamic_disp*/selectedMenuItem == &m_s0i1)
+   if(selectedMenuItem == &m_s0i1)//первый дисплей
    {
 	   for(i=0;i<CHANNEL_NUMBER;i++)
 	   {
-			//value=GetCalibrateVal(i,channels[i].channel_data);
-			  value= (float)channels[i].channel_data/0xFFFFFF*10.225;
+			value=GetCalibrateVal(i,channels[i].channel_data);
+			//  value= (float)channels[i].channel_data/0xFFFFFF*10.225;
 		 
 			  if(_chkfloat_ (value)>1) 
 			  {
@@ -721,10 +714,23 @@ PT_THREAD(DisplayProcess(struct pt *pt))
 			  }
 			  else  
 			  {
-				   sprintf(channels[i].string_buf,"%3.2f",value);
+				  if((value>9.99)||(value<0.00))
+				  {
+				  		if(value>9.99)
+						{
+							sprintf(channels[i].string_buf,"9.99");
+						}
+						else
+						{
+							sprintf(channels[i].string_buf,"0.00");
+						}
+				  }
+				  else
+				  {
+				  	  sprintf(channels[i].string_buf,"%3.2f",value);
+				  }
 			  }
 		}
-
 	}
 
 	Tablo_Output_Frame();

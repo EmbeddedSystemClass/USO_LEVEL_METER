@@ -22,10 +22,20 @@
 //	#define CHNL_UNKNOWN_MOD	0
 
 
+enum //по какой уставке включать сигнал
+{
+	SIGNAL_NONE=0,
+	SIGNAL_ALL,
+	SIGNAL_HI,
+	SIGNAL_LO
+};
+
 enum
 {
-	BLINK_OFF=0,
-	BLINK_ON
+	CAL_HI=0,
+	CAL_LO,
+	UST_HI,
+	UST_LO
 };
 //------------------------------------------------------------------
 struct Channel
@@ -55,19 +65,18 @@ struct Channel
 	{
 		struct
 		{
+			unsigned long  adc_hi;
+			float 		   cal_hi;
+		
 			unsigned long  adc_lo;
 			float 		   cal_lo;
 			
-			unsigned long  adc_hi;
-			float 		   cal_hi;
-
 			float		   ust_hi;
 			float		   ust_lo;
 
-//			unsigned char calibrate;//флаг калиброванности	
-//			unsigned char signal;//сигнал по превышению уставки	
+			unsigned char signal;//
 		} cal;
-		unsigned long serialize[6];//
+		unsigned long serialize[7];//
 	} calibrate;
 	
 } ;

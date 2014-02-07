@@ -10,12 +10,12 @@ unsigned char channel_number=CHANNEL_NUMBER;//количество каналов
 void ChannelsInit(void) //using 0//инициализация структуры каналов
 {	
 //	Restore_Channels_Data();
-	channels[0].blink=0;
-	channels[1].blink=0;
-	channels[2].blink=0;
-	channels[3].blink=0;
-	channels[4].blink=0;
-	channels[5].blink=0;
+//	channels[0].blink=0;
+//	channels[1].blink=0;
+//	channels[2].blink=0;
+//	channels[3].blink=0;
+//	channels[4].blink=0;
+//	channels[5].blink=0;
 
 	return;
 }
@@ -36,18 +36,18 @@ void ChannelsInit(void) //using 0//инициализация структуры каналов
 //void Restore_Channels_Data(void) //using 0//Восстановим данные каналов из ППЗУ
 //{
 //	unsigned char i=0;
-//	unsigned long crc=0, crc_true=0;
+////	unsigned long crc=0, crc_true=0;
 //	for(i=0;i<CHANNEL_NUMBER;i++)
 //	{
 //		EEPROM_Read(&channels[i].settings.serialize,1,ADC_SETTINGS_ADDR+i);
 //	}
-//	crc_true=(unsigned long)Channels_Get_Settings_CRC();
-// 	EEPROM_Read(&crc,1,SETTINGS_DEVICE_CRC_ADDR);//считаем CRC настроек
-//
-//	if(crc_true!=crc)//сбой eeprom, обнулим настройки
-//	{
-//		Channels_Set_Default();
-//	}
+////	crc_true=(unsigned long)Channels_Get_Settings_CRC();
+//// 	EEPROM_Read(&crc,1,SETTINGS_DEVICE_CRC_ADDR);//считаем CRC настроек
+////
+////	if(crc_true!=crc)//сбой eeprom, обнулим настройки
+////	{
+////		Channels_Set_Default();
+////	}
 //
 //	return;
 //}
