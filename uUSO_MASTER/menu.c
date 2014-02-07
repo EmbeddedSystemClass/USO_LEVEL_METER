@@ -468,6 +468,7 @@ void SetBrightnessKey(unsigned char key)
 				else
 				{
 					//сохранить параметр в eeprom
+					SetBrightness(brightness);
 					enter_flag=0;
 				    flag_menu_entry=0;
 					dispMenu(); 
@@ -553,7 +554,7 @@ void CalibrationKey(unsigned char key,unsigned char channel,unsigned char type)
 						break;
 					}
 					
-				  if((_chkfloat_ (value)==0)&&(value>0.00)&&(value<9.99)) 
+				  if((_chkfloat_ (value)==0)&&(value>=0.00)&&(value<=9.99)) 
 				  {
 					   
 					   sprintf(channels[CAL_ENTER_FIELD].string_buf,"%3.2f",value);
@@ -569,7 +570,7 @@ void CalibrationKey(unsigned char key,unsigned char channel,unsigned char type)
 				else
 				{
 					  sscanf(channels[CAL_ENTER_FIELD].string_buf,"%f",&value);
-				   	  if((_chkfloat_ (value)==0)&&(value>0.00)&&(value<9.99)) 
+				   	  if((_chkfloat_ (value)==0)&&(value>=0.00)&&(value<=9.99)) 
 					  {
 							switch(type)
 							{
@@ -705,12 +706,12 @@ PT_THREAD(DisplayProcess(struct pt *pt))
    {
 	   for(i=0;i<CHANNEL_NUMBER;i++)
 	   {
-			value=GetCalibrateVal(i,channels[i].channel_data);
-			//  value= (float)channels[i].channel_data/0xFFFFFF*10.225;
+			  value=GetCalibrateVal(i,channels[i].channel_data);
 		 
 			  if(_chkfloat_ (value)>1) 
 			  {
 				   sprintf(channels[i].string_buf,"Err");
+				   Set_Blink_Sym(&channels[i],BLINK_NONE);
 			  }
 			  else  
 			  {
@@ -729,6 +730,16 @@ PT_THREAD(DisplayProcess(struct pt *pt))
 				  {
 				  	  sprintf(channels[i].string_buf,"%3.2f",value);
 				  }
+
+
+			  	 if((value<=channels[i].calibrate.cal.ust_hi)&&(value>=channels[i].calibrate.cal.ust_lo)) 
+				 {
+				 	  Set_Blink_Sym(&channels[i],BLINK_NONE); 
+				 }
+				 else
+				 {
+				 	 Set_Blink_Sym(&channels[i],BLINK_ALL);
+				 }
 			  }
 		}
 	}

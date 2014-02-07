@@ -86,8 +86,8 @@
 #define DEVICE_ADDR_MAX	0xF //максимальный адрес устройства
 //----------------------------адреса настроек в ППЗУ--------------------
 
-#define ADC_SETTINGS_ADDR	0x10
-
+//#define ADC_SETTINGS_ADDR	0x10
+#define ADC_BRIGHTNESS_ADDR	0x10
 
 #define DEVICE_ADDR_EEPROM	0x2A
 
