@@ -35,7 +35,7 @@ void main(void) //using 0
 	UART_Init();
 
 
-//	WDT_Init(WDT_2000);//включить сторожевой таймер
+	WDT_Init(WDT_2000);//включить сторожевой таймер
 
 	PT_INIT(&pt_sort);
 
@@ -47,7 +47,7 @@ void main(void) //using 0
 	{		
 		ulongsort_process(&pt_sort);
 		DisplayProcess(&pt_display);  
-//		WDT_Process(&pt_wdt);
+		WDT_Process(&pt_wdt);
 		KeyboardProcess(&pt_keyboard);	    
 	}
 }
