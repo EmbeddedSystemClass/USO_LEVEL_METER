@@ -44,7 +44,14 @@ enum {
 	MENU_SET_BRIGHTNESS
 };
 
-
+enum
+{
+	SIGNAL_OFF=0,
+	SIGNAL_1=1,
+	SIGNAL_2=3,
+	SIGNAL_3=5,
+	SIGNAL_4=7	
+};
 
 unsigned char startMenu(void);
 void initMenu(void);

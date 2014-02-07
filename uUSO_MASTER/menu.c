@@ -16,6 +16,7 @@
 
 extern struct Channel xdata channels[CHANNEL_NUMBER];//обобщенная структура каналов
 extern unsigned char brightness	;
+extern unsigned char signal;
 
 volatile struct pt pt_display;
 
@@ -138,6 +139,7 @@ void SetBrightnessKey(unsigned char key);
 void SetBrightnessScreen(void);
 
 void Set_Blink_Sym(struct Channel *chn,unsigned char sym_position);
+void Set_Signal(unsigned char type);
 
 void menuChange(menuItem code* NewMenu)
 {
@@ -451,6 +453,7 @@ unsigned char startMenu(void)
 		Set_Blink_Sym(&channels[3],BLINK_NONE);
 		Set_Blink_Sym(&channels[4],BLINK_NONE);
 		Set_Blink_Sym(&channels[5],BLINK_NONE);
+		Set_Signal(SIGNAL_OFF);
 	return 0;
 }
 //-------------------------------------------------------
@@ -510,6 +513,7 @@ void SetBrightnessScreen(void)
 			channels[i].string_buf[3]=0;
 		}
 		sprintf(channels[0].string_buf," % 3bu",brightness);
+		memcpy(channels[1].string_buf,selectedMenuItem->Text,4);
 }
 
 
@@ -688,6 +692,13 @@ void Set_Blink_Sym(struct Channel *chn,unsigned char sym_position)
 		}	
 }
 //--------------------------------------------------------
+
+
+void Set_Signal(unsigned char type)
+{
+	signal=type&0xF;
+}
+//--------------------------------------------------------
 PT_THREAD(DisplayProcess(struct pt *pt))
 {
 
@@ -735,13 +746,19 @@ PT_THREAD(DisplayProcess(struct pt *pt))
 			  	 if((value<=channels[i].calibrate.cal.ust_hi)&&(value>=channels[i].calibrate.cal.ust_lo)) 
 				 {
 				 	  Set_Blink_Sym(&channels[i],BLINK_NONE); 
+					  Set_Signal(SIGNAL_OFF);
 				 }
 				 else
 				 {
 				 	 Set_Blink_Sym(&channels[i],BLINK_ALL);
+					 Set_Signal(SIGNAL_1);
 				 }
 			  }
 		}
+	}
+	else
+	{
+		Set_Signal(SIGNAL_OFF);
 	}
 
 	Tablo_Output_Frame();

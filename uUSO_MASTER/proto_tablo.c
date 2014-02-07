@@ -30,6 +30,7 @@ volatile unsigned char idata symbol=0xFF;//принятый символ
 volatile struct pt pt_proto;
 
 unsigned char brightness=0x1;
+unsigned char signal=0x0;
 //-----------------------------------------------------------------------------------
 
 void UART_ISR(void) interrupt 4 //using 1
@@ -162,7 +163,7 @@ unsigned char Tablo_Output_Frame(void)
    counter++;
    TransferBuf[counter]=0x41;//формат канала
    counter++;
-   TransferBuf[counter]=0x0;//тип сигнала	-пока нет сигнала
+   TransferBuf[counter]=signal&0xF;//0x0;//тип сигнала	-пока нет сигнала
    counter++;
    TransferBuf[counter]=CRC_Check(TransferBuf,counter);
    counter++;
